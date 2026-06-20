@@ -51,8 +51,6 @@ app.use('/api/admin', require('./routes/admin'));
 const authController = require('./controllers/authController');
 app.post('/api/auth/login', authController.login);
 
-
-
 // Only listen when not running on Vercel (serverless)
 if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;
