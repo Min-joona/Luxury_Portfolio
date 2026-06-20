@@ -51,12 +51,19 @@ app.use('/api/admin', require('./routes/admin'));
 const authController = require('./controllers/authController');
 app.post('/api/auth/login', authController.login);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+
+// Only listen when not running on Vercel (serverless)
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
 
 process.on('unhandledRejection', (err) => {
   console.log('Unhandled Rejection at:', err.stack || err);
 });
+
+module.exports = app;
 
