@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, User, AlertCircle } from 'lucide-react';
+import { api } from '../api';
 
 const AdminLogin = ({ darkMode }) => {
   const navigate = useNavigate();
@@ -15,19 +16,10 @@ const AdminLogin = ({ darkMode }) => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const data = await api('/api/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify(credentials)
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Login failed');
-      }
 
       // Save token to localStorage
       localStorage.setItem('adminToken', data.token);

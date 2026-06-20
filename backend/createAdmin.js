@@ -1,69 +1,56 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const readline = require('readline');
 require('dotenv').config();
 
-// Admin credentials - CHANGE THESE TO YOUR PREFERENCE!
-const ADMIN_USERNAME = 'MinJun';
-const ADMIN_PASSWORD = 'MyPortfolio123';
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+function ask(question) {
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => resolve(answer));
+  });
+}
 
 async function createAdmin() {
   try {
-    // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB\n');
 
-    // Define schema inline to avoid model conflicts
     const adminSchema = new mongoose.Schema({
-      username: {
-        type: String,
-        required: true,
-        unique: true
-      },
-      password: {
-        type: String,
-        required: true
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now
-      }
+      username: { type: String, required: true, unique: true },
+      password: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now }
     });
 
-    // Create model
     const Admin = mongoose.model('Admin', adminSchema);
 
-    // Check if admin already exists
-    const existingAdmin = await Admin.findOne({ username: ADMIN_USERNAME });
+    const username = await ask('Enter admin username: ');
+    const password = await ask('Enter admin password (min 8 chars): ');
+
+    if (!username || !password || password.length < 8) {
+      console.log('Username required and password must be at least 8 characters.');
+      process.exit(1);
+    }
+
+    const existingAdmin = await Admin.findOne({ username });
     if (existingAdmin) {
-      console.log('✅ Admin already exists!');
-      console.log(`Username: ${ADMIN_USERNAME}`);
-      console.log('');
-      console.log('🌐 Login at: http://localhost:3000/admin/login');
+      console.log(`Admin "${username}" already exists.`);
+      console.log('Login at: http://localhost:3000/admin/login');
       process.exit(0);
     }
 
-    // Hash password manually
-    const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
-
-    // Create admin with hashed password
-    const admin = new Admin({
-      username: ADMIN_USERNAME,
-      password: hashedPassword
-    });
-
+    const admin = new Admin({ username, password });
     await admin.save();
-    console.log('✅ Admin created successfully!');
-    console.log(`Username: ${ADMIN_USERNAME}`);
-    console.log(`Password: ${ADMIN_PASSWORD}`);
-    console.log('');
-    console.log('🌐 Login at: http://localhost:3000/admin/login');
-    console.log('');
-    console.log('⚠️  IMPORTANT: Delete this file after creating admin for security!');
-    
+
+    console.log(`\nAdmin "${username}" created successfully!`);
+    console.log('Login at: http://localhost:3000/admin/login');
+    console.log('\nDelete createAdmin.js after use for security.');
+
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error creating admin:', error.message);
-    console.error(error.stack);
+    console.error('Error:', error.message);
     process.exit(1);
   }
 }

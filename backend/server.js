@@ -4,8 +4,21 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+
+// CORS - Restrict in production
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+  : ['http://localhost:3000'];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
+app.use(express.json({ limit: '10kb' }));
 
 // Connect to MongoDB
 const connectDB = async () => {
@@ -15,7 +28,6 @@ const connectDB = async () => {
   } catch (err) {
     console.error('CRITICAL: MongoDB connection error. Please check your MONGODB_URI in the .env file.');
     console.error('Error Details:', err.message);
-    // Do not exit the process, allow the server to start (even if DB functionality is limited)
   }
 };
 
@@ -35,17 +47,15 @@ app.use('/api/messages', require('./routes/messages'));
 app.use('/api/blogs', require('./routes/blogs'));
 app.use('/api/admin', require('./routes/admin'));
 
-// Auth routes
+// Auth routes - ONLY login, NOT open admin creation
 const authController = require('./controllers/authController');
 app.post('/api/auth/login', authController.login);
-app.post('/api/auth/create-admin', authController.createAdmin); // Run once to create admin
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   console.log('Unhandled Rejection at:', err.stack || err);
 });

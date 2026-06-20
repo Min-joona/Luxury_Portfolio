@@ -12,6 +12,7 @@ import {
   Share2,
   Users
 } from 'lucide-react';
+import { api } from '../api';
 
 const AdminDashboard = ({ darkMode }) => {
   const navigate = useNavigate();
@@ -33,27 +34,16 @@ const AdminDashboard = ({ darkMode }) => {
 
   const fetchAnalytics = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:5000/api/admin/analytics', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) {
-        if (response.status === 401) {
-          localStorage.removeItem('adminToken');
-          navigate('/admin/login');
-          return;
-        }
-        throw new Error('Failed to fetch analytics');
-      }
-      
-      const data = await response.json();
+      const data = await api('/api/admin/analytics');
       setStats(data.stats);
       setTopBlogs(data.topBlogs);
       setLoading(false);
     } catch (error) {
+      if (error.message === 'HTTP 401' || error.message === 'HTTP 403') {
+        localStorage.removeItem('adminToken');
+        navigate('/admin/login');
+        return;
+      }
       console.error('Error fetching analytics:', error);
       setLoading(false);
     }

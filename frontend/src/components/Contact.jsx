@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, MapPin, Github, Linkedin, Twitter, Send, Phone } from 'lucide-react';
+import API_URL from '../api';
 
 const Contact = ({ darkMode }) => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,6 @@ const Contact = ({ darkMode }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       const response = await fetch(`${API_URL}/api/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

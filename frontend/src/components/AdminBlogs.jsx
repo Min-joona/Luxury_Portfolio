@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Plus, Edit2, Trash2, ArrowLeft, Save, X } from 'lucide-react';
+import { api } from '../api';
 
 const AdminBlogs = ({ darkMode }) => {
   const navigate = useNavigate();
@@ -31,14 +32,8 @@ const AdminBlogs = ({ darkMode }) => {
 
   const fetchBlogs = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:5000/api/admin/blogs', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setBlogs(data);
-      }
+      const data = await api('/api/admin/blogs');
+      setBlogs(data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching blogs:', error);
@@ -49,26 +44,16 @@ const AdminBlogs = ({ darkMode }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('adminToken');
-      const url = editingBlog 
-        ? `http://localhost:5000/api/admin/blogs/${editingBlog._id}`
-        : 'http://localhost:5000/api/admin/blogs';
-      
-      const response = await fetch(url, {
-        method: editingBlog ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      });
+      const endpoint = editingBlog
+        ? `/api/admin/blogs/${editingBlog._id}`
+        : '/api/admin/blogs';
+      const method = editingBlog ? 'PUT' : 'POST';
 
-      if (response.ok) {
-        setShowForm(false);
-        setEditingBlog(null);
-        setFormData({ title: '', slug: '', excerpt: '', content: '', category: '', image: '', readTime: '' });
-        fetchBlogs();
-      }
+      await api(endpoint, { method, body: JSON.stringify(formData) });
+      setShowForm(false);
+      setEditingBlog(null);
+      setFormData({ title: '', slug: '', excerpt: '', content: '', category: '', image: '', readTime: '' });
+      fetchBlogs();
     } catch (error) {
       console.error('Error saving blog:', error);
     }
@@ -76,15 +61,9 @@ const AdminBlogs = ({ darkMode }) => {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this blog?')) return;
-    
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`http://localhost:5000/api/admin/blogs/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      if (response.ok) fetchBlogs();
+      await api(`/api/admin/blogs/${id}`, { method: 'DELETE' });
+      fetchBlogs();
     } catch (error) {
       console.error('Error deleting blog:', error);
     }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Trash2, ArrowLeft, Mail, User, Calendar } from 'lucide-react';
+import { api } from '../api';
 
 const AdminMessages = ({ darkMode }) => {
   const navigate = useNavigate();
@@ -20,14 +21,8 @@ const AdminMessages = ({ darkMode }) => {
 
   const fetchMessages = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:5000/api/admin/messages', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setMessages(data);
-      }
+      const data = await api('/api/admin/messages');
+      setMessages(data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -38,12 +33,8 @@ const AdminMessages = ({ darkMode }) => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this message?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`http://localhost:5000/api/admin/messages/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) fetchMessages();
+      await api(`/api/admin/messages/${id}`, { method: 'DELETE' });
+      fetchMessages();
     } catch (error) {
       console.error('Error deleting message:', error);
     }

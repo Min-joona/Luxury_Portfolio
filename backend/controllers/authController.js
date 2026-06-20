@@ -1,8 +1,12 @@
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
 
-// JWT Secret - in production, use environment variable
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
+// JWT Secret - MUST be set in .env for production
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('CRITICAL: JWT_SECRET environment variable is not set!');
+  process.exit(1);
+}
 
 // Login admin
 exports.login = async (req, res) => {
@@ -51,22 +55,4 @@ exports.verifyToken = (req, res, next) => {
   }
 };
 
-// Create initial admin (run once)
-exports.createAdmin = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    
-    // Check if admin already exists
-    const existingAdmin = await Admin.findOne({ username });
-    if (existingAdmin) {
-      return res.status(400).json({ error: 'Admin already exists' });
-    }
-    
-    const admin = new Admin({ username, password });
-    await admin.save();
-    
-    res.status(201).json({ message: 'Admin created successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+
