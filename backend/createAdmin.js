@@ -1,17 +1,8 @@
 const mongoose = require('mongoose');
-const readline = require('readline');
 require('dotenv').config();
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-function ask(question) {
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => resolve(answer));
-  });
-}
+const ADMIN_USERNAME = 'kimsabu32';
+const ADMIN_PASSWORD = 'kimi261203';
 
 async function createAdmin() {
   try {
@@ -26,25 +17,17 @@ async function createAdmin() {
 
     const Admin = mongoose.model('Admin', adminSchema);
 
-    const username = await ask('Enter admin username: ');
-    const password = await ask('Enter admin password (min 8 chars): ');
-
-    if (!username || !password || password.length < 8) {
-      console.log('Username required and password must be at least 8 characters.');
-      process.exit(1);
-    }
-
-    const existingAdmin = await Admin.findOne({ username });
+    const existingAdmin = await Admin.findOne({ username: ADMIN_USERNAME });
     if (existingAdmin) {
-      console.log(`Admin "${username}" already exists.`);
+      console.log(`Admin "${ADMIN_USERNAME}" already exists.`);
       console.log('Login at: http://localhost:3000/admin/login');
       process.exit(0);
     }
 
-    const admin = new Admin({ username, password });
+    const admin = new Admin({ username: ADMIN_USERNAME, password: ADMIN_PASSWORD });
     await admin.save();
 
-    console.log(`\nAdmin "${username}" created successfully!`);
+    console.log(`Admin "${ADMIN_USERNAME}" created successfully!`);
     console.log('Login at: http://localhost:3000/admin/login');
     console.log('\nDelete createAdmin.js after use for security.');
 

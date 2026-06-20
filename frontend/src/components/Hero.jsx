@@ -23,7 +23,7 @@ const Hero = ({ darkMode }) => {
             <h1 className={`font-serif text-7xl lg:text-8xl font-normal leading-[0.9] ${
               darkMode ? 'text-white' : 'text-[#1a1410]'
             }`}>
-              Amar<br />Mohammednur
+              Amar Hassen<br />Mohammednur
             </h1>
 
             <p className={`text-sm leading-relaxed max-w-md font-mono ${

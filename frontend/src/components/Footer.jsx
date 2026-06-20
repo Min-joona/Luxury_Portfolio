@@ -8,7 +8,7 @@ const Footer = ({ darkMode }) => {
         <p className={`text-[10px] font-mono tracking-widest ${
           darkMode ? 'text-white/40' : 'text-[#1a1410]/40'
         }`}>
-          © 2025 Amar Mohammednur. Crafted with precision.
+          © 2026 Amar Hassen Mohammednur. Crafted with precision.
         </p>
 
         {/* Center: Line decoration */}

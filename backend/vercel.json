@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "luxury-portfolio-api",
+  "name": "amar-shesheno-luxury-api",
   "builds": [
     {
       "src": "server.js",

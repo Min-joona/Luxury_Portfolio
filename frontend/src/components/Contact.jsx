@@ -73,7 +73,7 @@ const Contact = ({ darkMode }) => {
                 <span className={`font-mono text-sm ${
                   darkMode ? 'text-white' : 'text-[#1a1410]'
                 }`}>
-                  amarhassen9557@gmail.com
+                  amarshisheno@gmail.com
                 </span>
               </div>
 
@@ -86,7 +86,7 @@ const Contact = ({ darkMode }) => {
                 <span className={`font-mono text-sm ${
                   darkMode ? 'text-white/70' : 'text-[#1a1410]/70'
                 }`}>
-                  +251-93-368-0059
+                  +251 93 368 0059
                 </span>
               </div>
 
