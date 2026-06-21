@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, MeshTransmissionMaterial, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
+import UnicornScene from 'unicornstudio-react';
 import { Sparkles } from 'lucide-react';
 
 // Chocolate Atom Component - Rich chocolate appearance
@@ -172,9 +173,9 @@ const FlipCard = ({ darkMode }) => {
   };
 
   return (
-    <div className="relative w-full max-w-lg mx-auto" style={{ perspective: '1200px' }}>
+    <div className="relative w-full max-w-[320px] sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto" style={{ perspective: '1200px' }}>
       <motion.div
-        className="relative w-full aspect-[4/3] cursor-pointer"
+        className="relative w-full aspect-[3/4] sm:aspect-[4/5] md:aspect-[4/3] cursor-pointer"
         style={{ transformStyle: 'preserve-3d' }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.7, type: 'spring', stiffness: 200, damping: 20 }}
@@ -270,7 +271,7 @@ const FlipCard = ({ darkMode }) => {
           </motion.div>
         </div>
 
-        {/* Back - Photo */}
+        {/* Back - Unicorn Studio WebGL Scene */}
         <div 
           className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl"
           style={{ 
@@ -281,24 +282,19 @@ const FlipCard = ({ darkMode }) => {
               : '0 25px 50px -12px rgba(0, 0, 0, 0.3)'
           }}
         >
-          {/* Placeholder image from Unsplash */}
-          <img
-            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&crop=face"
-            alt="Developer Portrait"
-            className="w-full h-full object-cover"
-          />
-          
-          {/* Subtle overlay */}
-          <div 
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 40%)'
-            }}
+          <UnicornScene 
+            projectId="GtIi3mj1yn4RNahXgR4E"
+            sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.0-1/dist/unicornStudio.umd.js"
+            className="w-full h-full"
+            lazyLoad
+            production
+            paused={!isFlipped}
+            scale={0.5}
           />
 
           {/* Flip back hint */}
           <motion.div 
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full backdrop-blur-md text-[10px] font-mono tracking-wider border"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full backdrop-blur-md text-[10px] font-mono tracking-wider border z-10"
             style={{
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
               borderColor: 'rgba(255, 255, 255, 0.3)',

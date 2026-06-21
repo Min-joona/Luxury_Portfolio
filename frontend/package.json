@@ -16,7 +16,8 @@
     "react-dom": "^19.2.3",
     "react-router-dom": "^6.30.3",
     "react-scripts": "5.0.1",
-    "three": "^0.182.0"
+    "three": "^0.182.0",
+    "unicornstudio-react": "^2.1.12"
   },
   "scripts": {
     "start": "react-scripts start",
