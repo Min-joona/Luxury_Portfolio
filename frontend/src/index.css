@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply transition-colors duration-500;
-  }
-  
   body {
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
     overflow-x: hidden;
