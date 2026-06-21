@@ -49,7 +49,7 @@ const Preloader = ({ onLoadingComplete }) => {
           </motion.svg>
 
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="font-serif text-2xl text-white">민준</div>
+            <div className="font-serif text-2xl text-white">AH</div>
           </div>
         </div>
 
