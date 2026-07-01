@@ -20,7 +20,7 @@ const Hero = ({ darkMode }) => {
               Full Stack Developer
             </span>
             
-            <h1 className={`font-serif text-7xl lg:text-8xl font-normal leading-[0.9] ${
+            <h1 className={`font-serif text-4xl sm:text-6xl lg:text-8xl font-normal leading-[1] lg:leading-[0.9] break-words ${
               darkMode ? 'text-white' : 'text-[#1a1410]'
             }`}>
               Amar Hassen<br />Mohammednur
@@ -32,7 +32,7 @@ const Hero = ({ darkMode }) => {
               Dedicated Full Stack Developer with a strong foundation in building web interfaces and managing databases. Efficiency-driven developer focused on creating tools that solve real-world problems reliably.
             </p>
 
-            <div className="flex gap-4 pt-4">
+            <div className="flex flex-wrap gap-4 pt-4">
               <a
                 href="#projects"
                 className={`group px-8 py-4 font-mono text-[11px] tracking-[0.2em] border transition-all duration-300 ${

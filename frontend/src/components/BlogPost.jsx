@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Clock, Heart, Share2, MessageCircle, Send, Moon, Sun } from 'lucide-react';
+import API_URL from '../api';
 
 const BlogPost = ({ darkMode, setDarkMode }) => {
   const { slug } = useParams();
@@ -18,7 +19,7 @@ const BlogPost = ({ darkMode, setDarkMode }) => {
 
   const fetchBlog = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/blogs/${slug}`);
+      const response = await fetch(`${API_URL}/api/blogs/${slug}`);
       if (!response.ok) {
         setLoading(false);
         return;
@@ -34,7 +35,7 @@ const BlogPost = ({ darkMode, setDarkMode }) => {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/blogs/${slug}/comments`);
+      const response = await fetch(`${API_URL}/api/blogs/${slug}/comments`);
       const data = await response.json();
       if (Array.isArray(data)) {
         setComments(data);
@@ -50,7 +51,7 @@ const BlogPost = ({ darkMode, setDarkMode }) => {
   const handleLike = async () => {
     if (liked) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/blogs/${slug}/like`, {
+      const response = await fetch(`${API_URL}/api/blogs/${slug}/like`, {
         method: 'POST'
       });
       const data = await response.json();
@@ -63,7 +64,7 @@ const BlogPost = ({ darkMode, setDarkMode }) => {
 
   const handleShare = async () => {
     try {
-      await fetch(`http://localhost:5000/api/blogs/${slug}/share`, {
+      await fetch(`${API_URL}/api/blogs/${slug}/share`, {
         method: 'POST'
       });
       navigator.clipboard.writeText(window.location.href);
@@ -76,7 +77,7 @@ const BlogPost = ({ darkMode, setDarkMode }) => {
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5000/api/blogs/${slug}/comment`, {
+      const response = await fetch(`${API_URL}/api/blogs/${slug}/comment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newComment)
