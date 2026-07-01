@@ -3,6 +3,48 @@ import { ArrowUpRight } from 'lucide-react';
 
 const projects = [
   {
+    title: "Prime Pair Academy",
+    category: "Gamified Learning Platform",
+    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop",
+    link: "https://github.com/Min-joona/prime-pair-academy",
+    desc: "Khan-Academy-meets-Duolingo MERN platform with two original mascots (Ghefi & Lethe), XP/streaks, interactive quizzes, flashcards, scholarships and opportunities."
+  },
+  {
+    title: "Eritrea Learn Academy",
+    category: "Education / E-Learning",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop",
+    link: "https://github.com/Min-joona/eritrea-academy",
+    desc: "Teach English, computer skills, and world languages in Tigrigna/English/Arabic. Placement tests, reading/listening/practice lessons, exams, and a live-WPM typing course."
+  },
+  {
+    title: "Lumière E-Commerce Platform",
+    category: "Full Stack E-Commerce",
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop",
+    link: "https://github.com/Min-joona/amar-ecommerce",
+    desc: "Complete MERN store: product catalog with search/filter/sort, cart, JWT auth, checkout, order history, reviews, and an admin dashboard."
+  },
+  {
+    title: "Pulse Analytics Dashboard",
+    category: "Analytics Platform",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
+    link: "https://github.com/Min-joona/amar-analytics",
+    desc: "MERN dashboard with KPI deltas, revenue trends, breakdowns and a live activity feed — powered by MongoDB aggregation pipelines and Recharts."
+  },
+  {
+    title: "Ripple Real-Time Chat",
+    category: "Real-Time / WebSockets",
+    image: "https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=800&h=600&fit=crop",
+    link: "https://github.com/Min-joona/realtime-chat",
+    desc: "Socket.io group chat with channels, online presence, and typing indicators. JWT-authenticated sockets and persisted message history."
+  },
+  {
+    title: "TaskFlow Kanban Board",
+    category: "Productivity / Project Management",
+    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop",
+    link: "https://github.com/Min-joona/kanban-board",
+    desc: "Trello-style MERN board with drag-and-drop cards and lists, labels, multiple boards, and debounced auto-save to MongoDB."
+  },
+  {
     title: "NESAB Vehicle Oil System",
     category: "Full Stack Web Application",
     image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop",
@@ -15,20 +57,6 @@ const projects = [
     image: "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=600&fit=crop",
     link: "https://github.com/Min-joona",
     desc: "Assisted development team integrating complex databases and optimizing site performance for the TVET institute web project."
-  },
-  {
-    title: "Data Analytics Dashboard",
-    category: "Analytics Platform",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona",
-    desc: "MERN stack dashboard with real-time data visualization, demonstrating proficiency in database management and responsive design."
-  },
-  {
-    title: "E-Commerce Platform",
-    category: "Full Stack E-Commerce",
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona",
-    desc: "Complete e-commerce solution built with HTML, CSS, JavaScript, and modern web technologies. Showcases high proficiency in Figma design and frontend development."
   }
 ];
 
