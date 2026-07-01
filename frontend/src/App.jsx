@@ -6,6 +6,8 @@ import FullPageSkeleton from './components/FullPageSkeleton';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Projects from './components/Projects';
+import Experience from './components/Experience';
+import Designs from './components/Designs';
 import Timeline from './components/Timeline';
 import Blogs from './components/Blogs';
 import Contact from './components/Contact';
@@ -41,6 +43,8 @@ const Home = ({ darkMode, setDarkMode }) => {
           transition={{ duration: 1 }}
         >
           <Projects darkMode={darkMode} />
+          <Experience darkMode={darkMode} />
+          <Designs darkMode={darkMode} />
           <Timeline darkMode={darkMode} />
           <Blogs darkMode={darkMode} />
           <Contact darkMode={darkMode} />
