@@ -1,60 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Homepage -->
   <url>
-    <loc>https://amarmohammednur-vercel.app</loc>
-    <lastmod>2026-02-07</lastmod>
+    <loc>https://amar-shesheno-luxury.vercel.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
-  <!-- Blog Posts -->
-  <url>
-    <loc>https://amarmohammednur-vercel.app/blog</loc>
-    <lastmod>2026-03-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://amarmohammednur-vercel.app/blog/building-scalable-react-applications</loc>
-    <lastmod>2026-03-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://amarmohammednur-vercel.app/blog/art-of-minimalist-ui-design</loc>
-    <lastmod>2026-02-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://amarmohammednur-vercel.app/blog/mastering-typescript-2024</loc>
-    <lastmod>2026-02-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://amarmohammednur-vercel.app/blog/performance-optimization-techniques</loc>
-    <lastmod>2026-02-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://amarmohammednur-vercel.app/blog/future-of-web-development</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://amarmohammednur-vercel.app/blog/creating-accessible-web-experiences</loc>
-    <lastmod>2026-01-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/building-scalable-react-applications</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/art-of-minimalist-ui-design</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/mastering-typescript-2024</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/performance-optimization-techniques</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/future-of-web-development</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/creating-accessible-web-experiences</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/advanced-css-grid-layouts</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/serverless-architecture-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/graphql-vs-rest-apis</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/docker-for-developers</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/state-management-2024</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
