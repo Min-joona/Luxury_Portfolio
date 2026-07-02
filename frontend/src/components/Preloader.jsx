@@ -1,22 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Claude-style preloader: the logo mark breathing softly on a calm
+// background, with three gentle "thinking" dots below. No progress ring,
+// no percentages — just a quiet pulse until the app is ready.
 const Preloader = ({ onLoadingComplete }) => {
-  const [progress, setProgress] = useState(0);
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => onLoadingComplete(), 600);
-          return 100;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 100);
-
-    return () => clearInterval(interval);
+    const timer = setTimeout(() => onLoadingComplete(), 2200);
+    return () => clearTimeout(timer);
   }, [onLoadingComplete]);
 
   return (
@@ -25,42 +16,31 @@ const Preloader = ({ onLoadingComplete }) => {
         className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0d0705]"
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+        transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
       >
-        <div className="relative">
-          {/* Animated SVG */}
-          <motion.svg
-            width="80"
-            height="80"
-            viewBox="0 0 100 100"
-            className="mb-8"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          >
-            <circle cx="50" cy="50" r="45" stroke="rgba(255,255,255,0.1)" strokeWidth="1" fill="none" />
-            <motion.circle
-              cx="50" cy="50" r="45"
-              stroke="white"
-              strokeWidth="1.5"
-              fill="none"
-              strokeDasharray="283"
-              strokeDashoffset={283 - (283 * Math.min(progress, 100)) / 100}
-            />
-          </motion.svg>
+        {/* Breathing logo mark */}
+        <motion.div
+          animate={{ scale: [1, 1.07, 1], opacity: [0.75, 1, 0.75] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="mb-10"
+        >
+          <img
+            src="/apple-touch-icon.png"
+            alt=""
+            className="h-20 w-20 rounded-3xl shadow-[0_0_60px_rgba(255,255,255,0.08)]"
+          />
+        </motion.div>
 
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="font-serif text-2xl text-white">AH</div>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div className="w-32 h-px bg-white/10 relative">
-            <motion.div
-              className="absolute top-0 left-0 h-full bg-white"
-              initial={{ width: 0 }}
-              animate={{ width: `${Math.min(progress, 100)}%` }}
+        {/* Thinking dots */}
+        <div className="flex gap-2">
+          {[0, 1, 2].map((i) => (
+            <motion.span
+              key={i}
+              className="h-2 w-2 rounded-full bg-white/70"
+              animate={{ opacity: [0.2, 1, 0.2], y: [0, -4, 0] }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut', delay: i * 0.18 }}
             />
-          </div>
+          ))}
         </div>
       </motion.div>
     </AnimatePresence>

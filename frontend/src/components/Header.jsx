@@ -9,9 +9,12 @@ const Header = ({ darkMode, setDarkMode }) => {
     }`}>
       <nav className="flex justify-between items-center">
         {/* Logo */}
-        <div className={`font-serif text-xl tracking-tight ${darkMode ? 'text-white' : 'text-[#1a1410]'}`}>
-          Portfolio
-        </div>
+        <a href="#home" className="flex items-center gap-3">
+          <img src="/favicon.png" alt="Amar Hassen" className="h-9 w-9 rounded-xl" />
+          <span className={`hidden sm:block font-serif text-xl tracking-tight ${darkMode ? 'text-white' : 'text-[#1a1410]'}`}>
+            Amar Hassen
+          </span>
+        </a>
 
         {/* Navigation Links */}
         <div className="hidden md:flex gap-8 font-mono text-[11px] tracking-[0.2em]">
