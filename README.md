@@ -1,51 +1,72 @@
-# Luxury Portfolio
+# Amar Hassen Mohammednur — Portfolio
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-Live-success)](https://amar-shesheno-luxury.vercel.app)
-[![React](https://img.shields.io/badge/React-19-blue)](https://react.dev)
-[![Three.js](https://img.shields.io/badge/Three.js-Latest-black)](https://threejs.org)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)](https://mongodb.com)
+A full-stack developer portfolio with interactive 3D visuals, a database-driven blog, a contact pipeline, and a private admin dashboard for managing content.
 
-> Full-stack developer portfolio with interactive 3D visuals, blog system, and admin dashboard.
+**Live site:** [amar-shesheno-luxury.vercel.app](https://amar-shesheno-luxury.vercel.app)
 
-## Live Site
+## Overview
 
-**https://amar-shesheno-luxury.vercel.app**
+- **Interactive 3D hero** — Three.js scene with smooth Framer Motion transitions
+- **Selected work** — six production full-stack projects with source links
+- **Experience & designs** — professional background, scholarships, and Figma work
+- **Blog** — full articles with likes, shares, views, and comments, served from MongoDB
+- **Contact** — validated form persisting messages to the database
+- **Admin dashboard** — authenticated panel with content statistics and full CRUD over blogs and messages
+- **Dark / light theming** — persistent, system-aware toggle
 
-## Features
+## Architecture
 
-- Interactive 3D elements with Three.js
-- Smooth animations with Framer Motion
-- Dark/Light theme toggle
-- Full blog system with likes, shares
-- Contact form with MongoDB storage
-- Admin dashboard (manage blogs, messages)
-- Fully responsive design
+```
+Luxury-Portfolio/
+├── backend/          Express REST API
+│   ├── controllers/  Authentication
+│   ├── models/       Admin, Blog, Message
+│   └── routes/       /api/blogs · /api/messages · /api/admin
+└── frontend/         React app (Create React App)
+    └── src/
+        └── components/   Sections, blog reader, admin panel
+```
 
 ## Tech Stack
 
-**Frontend:** React 19, Three.js, Framer Motion, Tailwind CSS
-**Backend:** Node.js, Express, MongoDB/Mongoose
-**Deployment:** Vercel
+| Layer      | Technology                                             |
+| ---------- | ------------------------------------------------------ |
+| Frontend   | React 19, Three.js, Framer Motion, Tailwind CSS        |
+| Backend    | Node.js, Express, Mongoose                             |
+| Database   | MongoDB Atlas                                          |
+| Security   | Helmet, rate limiting, input sanitization, JWT         |
 
-## Running Locally
+## Getting Started
+
+**Prerequisites:** Node.js 18+ and a MongoDB connection string.
 
 ```bash
-git clone <repo-url>
-cd Luxury-Portfolio
+# API
+cd backend
+npm install
+# create .env — see Environment below
+npm start
 
-# Frontend
+# Site
 cd frontend
 npm install
 npm start
-
-# Backend (separate terminal)
-cd backend
-npm install
-# Create .env file with MONGODB_URI, JWT_SECRET, ALLOWED_ORIGINS
-npm start
 ```
 
-## Deployment
+### Environment
 
-Frontend: `https://amar-shesheno-luxury.vercel.app`
-Backend API: `https://amar-shesheno-luxury-api.vercel.app`
+The API expects the following variables in `backend/.env`:
+
+| Variable          | Purpose                                   |
+| ----------------- | ----------------------------------------- |
+| `MONGODB_URI`     | MongoDB connection string                 |
+| `JWT_SECRET`      | Secret for signing admin session tokens   |
+| `ALLOWED_ORIGINS` | Comma-separated CORS origin allow-list    |
+
+## Author
+
+**Amar Hassen Mohammednur** — [github.com/Min-joona](https://github.com/Min-joona) · [LinkedIn](https://www.linkedin.com/in/amar-mohammednur-01aa32343)
+
+## License
+
+MIT

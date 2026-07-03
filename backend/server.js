@@ -1,9 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
+app.set('trust proxy', 1);
+
+// Security headers (JSON API — CSP handled by the frontend host)
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // CORS - Restrict in production
 const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -19,6 +25,27 @@ app.use(cors({
   }
 }));
 app.use(express.json({ limit: '10kb' }));
+
+// Strip Mongo operators ($, .) from user-supplied body keys.
+// (express-mongo-sanitize is not Express 5 compatible, so this is done inline.)
+const stripOperators = (obj) => {
+  if (!obj || typeof obj !== 'object') return;
+  for (const key of Object.keys(obj)) {
+    if (key.startsWith('$') || key.includes('.')) delete obj[key];
+    else stripOperators(obj[key]);
+  }
+};
+app.use((req, _res, next) => { stripOperators(req.body); next(); });
+
+// Rate limiting — generous globally, strict on login to blunt brute force
+app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, max: 300, standardHeaders: true, legacyHeaders: false }));
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many attempts, please try again later.' },
+});
 
 // Connect to MongoDB
 const connectDB = async () => {
@@ -49,7 +76,7 @@ app.use('/api/admin', require('./routes/admin'));
 
 // Auth routes - ONLY login, NOT open admin creation
 const authController = require('./controllers/authController');
-app.post('/api/auth/login', authController.login);
+app.post('/api/auth/login', authLimiter, authController.login);
 
 // Only listen when not running on Vercel (serverless)
 if (!process.env.VERCEL) {
@@ -64,4 +91,3 @@ process.on('unhandledRejection', (err) => {
 });
 
 module.exports = app;
-
