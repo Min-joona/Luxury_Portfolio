@@ -78,6 +78,19 @@ app.use('/api/admin', require('./routes/admin'));
 const authController = require('./controllers/authController');
 app.post('/api/auth/login', authLimiter, authController.login);
 
+// One-time cloud seed (blogs + admin bootstrap), guarded by a shared secret.
+app.post('/api/seed', async (req, res) => {
+  if (!process.env.SEED_TOKEN || req.headers['x-seed-token'] !== process.env.SEED_TOKEN) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  try {
+    const result = await require('./seedRunner')();
+    res.json({ message: 'Seed complete', ...result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Only listen when not running on Vercel (serverless)
 if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;

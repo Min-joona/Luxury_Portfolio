@@ -11,10 +11,13 @@ const Footer = ({ darkMode }) => {
           © 2026 Amar Hassen Mohammednur. Crafted with precision.
         </p>
 
-        {/* Center: Line decoration */}
-        <div className={`hidden md:block w-16 h-px ${
-          darkMode ? 'bg-white/20' : 'bg-[#1a1410]/20'
-        }`} />
+        {/* Center: Logo */}
+        <a href="#home" className="flex items-center gap-2">
+          <img src="/favicon.png" alt="Amar Hassen" className="h-7 w-7 rounded-lg" />
+          <span className={`font-serif text-base tracking-tight ${darkMode ? 'text-white' : 'text-[#1a1410]'}`}>
+            Amar Hassen
+          </span>
+        </a>
 
         {/* Right: Role */}
         <p className={`text-[10px] font-mono tracking-widest uppercase ${
