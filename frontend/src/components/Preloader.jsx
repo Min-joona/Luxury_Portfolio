@@ -1,10 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Claude-style preloader: the logo mark breathing softly on a calm
-// background, with three gentle "thinking" dots below. No progress ring,
-// no percentages — just a quiet pulse until the app is ready.
+const starVertices = Array.from({ length: 10 }, (_, i) => {
+  const angle = (i * Math.PI * 2) / 10 - Math.PI / 2;
+  const r = i % 2 === 0 ? 36 : 14;
+  return { x: Math.cos(angle) * r, y: Math.sin(angle) * r, outer: i % 2 === 0 };
+});
+
 const Preloader = ({ onLoadingComplete }) => {
+  const [formed, setFormed] = useState(false);
+
+  useEffect(() => {
+    const formTimer = setTimeout(() => setFormed(true), 700);
+    return () => clearTimeout(formTimer);
+  }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => onLoadingComplete(), 2200);
     return () => clearTimeout(timer);
@@ -18,17 +28,53 @@ const Preloader = ({ onLoadingComplete }) => {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
       >
-        {/* Breathing logo mark */}
+        {/* Star formation */}
         <motion.div
-          animate={{ scale: [1, 1.07, 1], opacity: [0.75, 1, 0.75] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          className="mb-10"
+          className="relative mb-10"
+          style={{ width: 80, height: 80 }}
+          animate={formed ? { rotate: 360 } : {}}
+          transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
         >
-          <img
-            src="/apple-touch-icon.png"
-            alt=""
-            className="h-20 w-20 rounded-3xl shadow-[0_0_60px_rgba(255,255,255,0.08)]"
-          />
+          {starVertices.map((v, i) => (
+            <motion.div
+              key={i}
+              className="absolute"
+              style={{ left: 40, top: 40 }}
+              initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
+              animate={{
+                x: v.x, y: v.y,
+                scale: 1, opacity: 1
+              }}
+              transition={{
+                delay: i * 0.06,
+                type: 'spring', stiffness: 150, damping: 12
+              }}
+            >
+              <motion.div
+                className="rounded-full"
+                style={{
+                  width: v.outer ? 6 : 3,
+                  height: v.outer ? 6 : 3,
+                  background: v.outer
+                    ? 'linear-gradient(135deg, #D4AF37, #FFF8E1)'
+                    : '#D4AF37',
+                  boxShadow: v.outer
+                    ? '0 0 12px rgba(212,175,55,0.5)'
+                    : '0 0 4px rgba(212,175,55,0.3)',
+                }}
+                animate={formed ? {
+                  scale: [1, 1.3, 1],
+                  opacity: [0.7, 1, 0.7],
+                } : {}}
+                transition={{
+                  duration: 2 + i * 0.1,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: i * 0.05,
+                }}
+              />
+            </motion.div>
+          ))}
         </motion.div>
 
         {/* Thinking dots */}
