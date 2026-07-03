@@ -1,7 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const starVertices = Array.from({ length: 10 }, (_, i) => {
+  const angle = (i * Math.PI * 2) / 10 - Math.PI / 2;
+  const r = i % 2 === 0 ? 36 : 14;
+  return { x: Math.cos(angle) * r, y: Math.sin(angle) * r, outer: i % 2 === 0 };
+});
+
 const Preloader = ({ onLoadingComplete }) => {
+  const [formed, setFormed] = useState(false);
+
+  useEffect(() => {
+    const formTimer = setTimeout(() => setFormed(true), 700);
+    return () => clearTimeout(formTimer);
+  }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => onLoadingComplete(), 2200);
     return () => clearTimeout(timer);
@@ -15,10 +28,54 @@ const Preloader = ({ onLoadingComplete }) => {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
       >
-        {/* CSS Star */}
-        <div className="star-container mb-10">
-          <div className="star" />
-        </div>
+        {/* Star formation */}
+        <motion.div
+          className="relative mb-10"
+          style={{ width: 80, height: 80 }}
+          animate={formed ? { rotate: 360 } : {}}
+          transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+        >
+          {starVertices.map((v, i) => (
+            <motion.div
+              key={i}
+              className="absolute"
+              style={{ left: 40, top: 40 }}
+              initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
+              animate={{
+                x: v.x, y: v.y,
+                scale: 1, opacity: 1
+              }}
+              transition={{
+                delay: i * 0.06,
+                type: 'spring', stiffness: 150, damping: 12
+              }}
+            >
+              <motion.div
+                className="rounded-full"
+                style={{
+                  width: v.outer ? 6 : 3,
+                  height: v.outer ? 6 : 3,
+                  background: v.outer
+                    ? 'linear-gradient(135deg, #D4AF37, #FFF8E1)'
+                    : '#D4AF37',
+                  boxShadow: v.outer
+                    ? '0 0 12px rgba(212,175,55,0.5)'
+                    : '0 0 4px rgba(212,175,55,0.3)',
+                }}
+                animate={formed ? {
+                  scale: [1, 1.3, 1],
+                  opacity: [0.7, 1, 0.7],
+                } : {}}
+                transition={{
+                  duration: 2 + i * 0.1,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: i * 0.05,
+                }}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
 
         {/* Thinking dots */}
         <div className="flex gap-2">
@@ -31,32 +88,6 @@ const Preloader = ({ onLoadingComplete }) => {
             />
           ))}
         </div>
-
-        <style>{`
-          .star-container {
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: starSpin 4s linear infinite;
-          }
-          .star {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #D4AF37, #FFF8E1);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            animation: starPulse 2s ease-in-out infinite;
-            box-shadow: 0 0 60px rgba(212, 175, 55, 0.25);
-          }
-          @keyframes starSpin {
-            to { transform: rotate(360deg); }
-          }
-          @keyframes starPulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.08); opacity: 1; }
-          }
-        `}</style>
       </motion.div>
     </AnimatePresence>
   );

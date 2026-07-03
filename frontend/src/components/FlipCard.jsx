@@ -30,14 +30,12 @@ const FlipCard = ({ darkMode }) => {
           {/* Animated gradient overlay */}
           <motion.div
             className="absolute inset-0"
-            animate={{
-              background: [
-                'radial-gradient(circle at 30% 30%, rgba(212,175,55,0.15) 0%, transparent 50%)',
-                'radial-gradient(circle at 70% 70%, rgba(212,175,55,0.15) 0%, transparent 50%)',
-                'radial-gradient(circle at 30% 30%, rgba(212,175,55,0.15) 0%, transparent 50%)',
-              ]
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            style={{
+              background: 'radial-gradient(circle at 30% 30%, rgba(212,175,55,0.15) 0%, transparent 50%)'
             }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           />
 
           {/* Ambient lighting effect */}
@@ -55,20 +53,23 @@ const FlipCard = ({ darkMode }) => {
                 className={`w-24 h-24 rounded-full border-2 ${
                   darkMode ? 'border-white/10' : 'border-white/20'
                 }`}
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
               />
               <motion.div
                 className={`absolute inset-4 rounded-full ${
                   darkMode ? 'bg-white/5' : 'bg-white/10'
                 }`}
-                animate={{ scale: [0.9, 1.1, 0.9] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
               />
               <motion.div
                 className="absolute inset-8 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#8D6E63] opacity-30"
-                animate={{ scale: [1, 0.8, 1], rotate: [0, 180, 360] }}
-                transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.4, ease: 'easeOut' }}
               />
             </div>
           </div>
