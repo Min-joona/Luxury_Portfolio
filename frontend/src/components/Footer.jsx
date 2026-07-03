@@ -13,7 +13,7 @@ const Footer = ({ darkMode }) => {
 
         {/* Center: Logo */}
         <a href="#home" className="flex items-center gap-2">
-          <img src="/favicon.png" alt="Amar Hassen" className="h-7 w-7 rounded-lg" />
+          <img src="/logo.png" alt="Amar Hassen" className="h-7 w-7 rounded-lg" />
           <span className={`font-serif text-base tracking-tight ${darkMode ? 'text-white' : 'text-[#1a1410]'}`}>
             Amar Hassen
           </span>
