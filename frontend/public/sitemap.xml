@@ -5,15 +5,22 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/building-scalable-react-applications</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/art-of-minimalist-ui-design</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/mastering-typescript-2024</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/performance-optimization-techniques</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/future-of-web-development</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/creating-accessible-web-experiences</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/advanced-css-grid-layouts</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/serverless-architecture-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/graphql-vs-rest-apis</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/docker-for-developers</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/state-management-2024</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/projects/prime-pair-academy</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/projects/eritrea-learn-academy</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/projects/lumiere-ecommerce</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/projects/pulse-analytics</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/projects/ripple-chat</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/projects/taskflow-kanban</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/projects/nesab-vehicle-oil</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/projects/jpii-institute-portal</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/building-prime-pair-academy</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/building-eritrea-learn-academy</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/building-lumiere-ecommerce</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/building-ripple-realtime-chat</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/building-pulse-analytics</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/building-taskflow-kanban</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/building-luxury-portfolio</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/my-language-learning-journey</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/my-coding-journey</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://amar-shesheno-luxury.vercel.app/blog/learning-korean-as-a-developer</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
