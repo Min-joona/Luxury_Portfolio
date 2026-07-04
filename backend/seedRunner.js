@@ -1,16 +1,21 @@
-/** Core seed logic for the portfolio: blog articles + admin bootstrap. */
 const Blog = require('./models/Blog');
+const Project = require('./models/Project');
+const Design = require('./models/Design');
 const Admin = require('./models/Admin');
-
-// Blog content lives in seedBlogs.js as a standalone script; the article
-// data is duplicated here in require-able form via a shared module.
 const { blogs } = require('./data/blogData');
+const projects = require('./data/projectData');
+const designs = require('./data/designData');
 
 async function runSeed() {
   await Blog.deleteMany({});
   await Blog.insertMany(blogs);
 
-  // Bootstrap the admin account only if configured and absent.
+  await Project.deleteMany({});
+  await Project.insertMany(projects);
+
+  await Design.deleteMany({});
+  await Design.insertMany(designs);
+
   let adminCreated = false;
   if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
     const existing = await Admin.findOne({ username: process.env.ADMIN_USERNAME });
@@ -20,7 +25,7 @@ async function runSeed() {
     }
   }
 
-  return { blogs: blogs.length, adminCreated };
+  return { blogs: blogs.length, projects: projects.length, designs: designs.length, adminCreated };
 }
 
 module.exports = runSeed;

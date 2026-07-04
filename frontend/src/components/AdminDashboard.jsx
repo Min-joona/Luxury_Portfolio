@@ -4,6 +4,8 @@ import {
   LayoutDashboard, 
   FileText, 
   FolderKanban, 
+  Palette,
+  Settings,
   MessageSquare, 
   LogOut,
   TrendingUp,
@@ -124,6 +126,18 @@ const AdminDashboard = ({ darkMode }) => {
             </Link>
             
             <Link
+              to="/admin/designs"
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                darkMode 
+                  ? 'text-white/70 hover:bg-white/10 hover:text-white' 
+                  : 'text-[#1a1410]/70 hover:bg-[#1a1410]/10 hover:text-[#1a1410]'
+              }`}
+            >
+              <Palette size={20} />
+              <span className="font-mono text-sm">Designs</span>
+            </Link>
+
+            <Link
               to="/admin/messages"
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 darkMode 
@@ -133,6 +147,18 @@ const AdminDashboard = ({ darkMode }) => {
             >
               <MessageSquare size={20} />
               <span className="font-mono text-sm">Messages</span>
+            </Link>
+
+            <Link
+              to="/admin/settings"
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                darkMode 
+                  ? 'text-white/70 hover:bg-white/10 hover:text-white' 
+                  : 'text-[#1a1410]/70 hover:bg-[#1a1410]/10 hover:text-[#1a1410]'
+              }`}
+            >
+              <Settings size={20} />
+              <span className="font-mono text-sm">Settings</span>
             </Link>
           </nav>
         </div>

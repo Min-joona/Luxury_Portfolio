@@ -1,257 +1,257 @@
-// Blog article seed data (shared by seedBlogs.js and seedRunner.js).
 const blogs = [
   {
-    slug: "building-scalable-react-applications",
-    title: "Building Scalable React Applications",
-    excerpt: "Learn the best practices for architecting large-scale React applications with proper state management and component composition.",
-    content: `When a React app is small, almost any structure works. The trouble starts later — when there are forty screens, three teams touching the same files, and a bug that hides behind five layers of props. Scalability is really about keeping the app easy to change as it grows. Here is how I approach it.
+    slug: "building-prime-pair-academy",
+    title: "Building Prime Pair Academy: A Gamified Learning Platform",
+    excerpt: "How I built a MERN-powered learning platform with XP, streaks, and two original mascots that keep students coming back daily.",
+    content: `Prime Pair Academy started with a simple observation: traditional e-learning platforms are either comprehensive but dull, or engaging but shallow. I wanted both — a platform that teaches real computer science concepts while feeling as rewarding as a game.
 
-Start with a clear component hierarchy. I split components into three kinds: pages (they own routing and data fetching), containers (they hold logic and state), and presentational components (they only receive props and render UI). Presentational components are the ones you reuse everywhere, so keep them pure and dumb.
+The stack was an easy choice. React for the front-end, Node.js and Express for the API, MongoDB for flexibility with user progress data, and JWT for authentication. Framer Motion handles the animations that make the mascots, Ghefi and Lethe, feel alive.
 
-Give every component a single responsibility. If a component fetches data, formats it, renders a form, and handles submission, it is doing four jobs. Split it. Small components are easier to test, easier to move, and far easier to reason about at 2 a.m.
+The XP and streak system was the hardest piece to get right. Each action — completing a quiz, finishing a flashcard set, logging in — awards points, but the formula had to feel fair. I settled on diminishing returns: the first action of the day gives the most XP, encouraging daily engagement without grinding. Streaks multiply earnings but reset if you miss a day, borrowing the psychology from Duolingo.
 
-Be deliberate about state. Not everything belongs in a global store. Ask where a piece of state is actually used: if it lives in one component, use useState; if a small subtree needs it, lift it up or use Context; only truly global things — the current user, the theme — deserve a store like Redux or Zustand. Server data is its own category, and a tool like React Query or SWR handles caching and refetching better than you will by hand.
+The mascots were a bet that paid off. Ghefi (a curious fox) guides beginners; Lethe (a thoughtful owl) appears for advanced topics. They react to right and wrong answers, celebrate milestones, and give the platform a personality that static text never could. Building their animation system in Framer Motion with expression variants taught me a lot about state-driven UI.
 
-Finally, define boundaries early. Group files by feature, not by type, so everything a feature needs sits together. Add an error boundary around risky sections so one broken widget cannot take down the page.
+The scholarship board was a late addition but one of the most meaningful. Students can browse real scholarship opportunities, save them, and track deadlines. It turns the platform from a study tool into a launchpad.
 
-Scalability is not a library you install. It is a hundred small decisions that keep complexity from compounding. Make the easy-to-change choice each time and the big app mostly takes care of itself.`,
-    category: "React",
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=500&fit=crop",
+Deployed at primpeairacademy.vercel.app, the project taught me that the best educational software respects the student's time and rewards their curiosity — everything else is just features.`,
+    category: "Projects",
+    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=500&fit=crop",
     readTime: "8 min read",
-    date: new Date("2024-01-15"),
-    likes: 42,
-    shares: 15,
-    views: 1200
-  },
-  {
-    slug: "art-of-minimalist-ui-design",
-    title: "The Art of Minimalist UI Design",
-    excerpt: "Exploring how less is more in modern web design. Creating elegant interfaces that prioritize user experience.",
-    content: `Minimalism is often misunderstood as "make it plain." It is not. Minimalist design is the discipline of removing everything that does not earn its place, so the things that remain can speak clearly. A minimal interface is not empty — it is focused.
-
-The first tool is whitespace. Space around an element is not wasted; it tells the eye where to rest and what belongs together. When a layout feels cramped, the fix is usually more space, not smaller text. Give your headings room and they start to feel important on their own.
-
-The second tool is typography. In a minimal interface, type does most of the visual work, so choose it carefully. Two families are plenty — one for headings, one for body. Establish a clear scale so the difference between a title, a subtitle, and a paragraph is obvious at a glance. Good hierarchy means a user can skim your page and still understand it.
-
-The third tool is restraint with color. Pick two or three colors and use them with intent. One neutral for most surfaces, one accent for actions, and that is often enough. When everything is colorful, nothing stands out; a single well-placed accent draws the eye exactly where you want it.
-
-The hard part is editing. Every button, label, and divider should justify itself. If you remove an element and nothing breaks, it was decoration. Ship the version without it.
-
-Minimalism rewards the user with speed and calm. There is less to read, less to decode, less to get wrong. Done well, it feels less like a design choice and more like the interface simply getting out of the way.`,
-    category: "Design",
-    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=500&fit=crop",
-    readTime: "5 min read",
-    date: new Date("2024-01-08"),
-    likes: 38,
-    shares: 12,
-    views: 980
-  },
-  {
-    slug: "mastering-typescript-2024",
-    title: "Mastering TypeScript in 2024",
-    excerpt: "A comprehensive guide to TypeScript features that will level up your development workflow and catch bugs early.",
-    content: `TypeScript stopped being optional a while ago. It catches whole categories of bugs before you run the code, and it turns your editor into a map of the codebase. But most teams use maybe a third of what it offers. Here is where the real leverage is.
-
-Let inference do the work. You do not need to annotate everything. If a function returns a value TypeScript can figure out, let it. Reserve explicit types for the boundaries — function parameters, public APIs, and data coming from the network. Over-annotating adds noise without adding safety.
-
-Model your data honestly. If a value can be a string or null, say so, and TypeScript will force you to handle the null. Discriminated unions are the underused hero here: give each variant a shared literal field like "status", and the compiler narrows the type for you inside each branch. Impossible states become impossible to write.
-
-Learn a few utility types. Partial, Pick, Omit, and Record cover most day-to-day needs, and they keep your types in sync automatically. When a base type changes, everything derived from it updates too — no more editing five interfaces by hand.
-
-Use type guards at the edges. Data from an API is unknown until you check it. A small validation function that narrows unknown into a real type is worth more than a dozen casts, because a cast just silences the compiler while a guard actually verifies reality.
-
-The goal is not maximum strictness for its own sake. It is a codebase where the types describe the truth, so that when something changes, the compiler tells you every place that now needs attention. That feedback loop is what makes large refactors safe — and it is why teams that adopt TypeScript rarely go back.`,
-    category: "TypeScript",
-    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=500&fit=crop",
-    readTime: "12 min read",
-    date: new Date("2023-12-28"),
-    likes: 56,
-    shares: 23,
-    views: 2100
-  },
-  {
-    slug: "performance-optimization-techniques",
-    title: "Performance Optimization Techniques",
-    excerpt: "Deep dive into web performance optimization strategies that can improve your site's loading speed by 300%.",
-    content: `Performance is a feature. A fast site ranks better, converts better, and simply feels more trustworthy. The good news is that most sites are slow for a handful of predictable reasons, and fixing them does not require magic — just measurement and discipline.
-
-Start by measuring, not guessing. Open Lighthouse or WebPageTest and look at the Core Web Vitals: Largest Contentful Paint (how fast the main content shows), Interaction to Next Paint (how quickly the page responds), and Cumulative Layout Shift (how much things jump around while loading). These three numbers tell you where the pain is.
-
-Images are almost always the biggest win. Serve them in modern formats, size them to how they are actually displayed, and lazy-load anything below the fold. A single hero image shipped at full camera resolution can outweigh your entire JavaScript bundle.
-
-JavaScript is the second front. Ship less of it. Split your code so each route only loads what it needs, defer non-critical scripts, and audit your dependencies — that date library you imported for one function might be pulling in a hundred kilobytes. Every kilobyte of JS is parsed and executed on the user's phone, which is slower than your laptop.
-
-Then cache aggressively. Static assets should carry long cache headers with fingerprinted filenames, so returning visitors download almost nothing. A CDN puts those assets physically closer to your users, cutting round-trip time.
-
-Finally, prevent layout shift by reserving space for images, ads, and fonts before they load. Nothing frustrates a user more than tapping a button that jumps away at the last moment.
-
-Optimization is iterative: measure, fix the biggest problem, measure again. Do that three or four times and a sluggish page usually turns snappy.`,
-    category: "Performance",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop",
-    readTime: "10 min read",
-    date: new Date("2023-12-20"),
-    likes: 67,
-    shares: 31,
-    views: 3400
-  },
-  {
-    slug: "future-of-web-development",
-    title: "The Future of Web Development",
-    excerpt: "Exploring emerging technologies and trends that will shape the future of web development in the coming years.",
-    content: `Predicting the future of the web is a good way to be wrong in public, but a few directions already feel less like bets and more like currents. Here is where the ground seems to be moving.
-
-The edge is getting closer to the user. Instead of one server in one region, code increasingly runs in dozens of locations near whoever is asking. That changes how we think about latency, data, and even where rendering happens. Pages can be personalized and dynamic while still arriving almost instantly.
-
-AI is becoming part of the toolchain, not just the product. Autocomplete that understands your codebase, tests scaffolded from a description, and reviews that catch obvious mistakes are already normal. The developers who thrive will treat these as power tools — accelerating the boring parts while keeping their own judgment firmly in charge.
-
-WebAssembly keeps quietly expanding what the browser can do. Workloads that once demanded native apps — video editing, simulations, heavy data work — now run at near-native speed inside a tab. That blurs the old line between "website" and "application."
-
-The rendering pendulum has settled into balance. After years of swinging between server-rendered pages and thick client apps, the mainstream has landed on hybrids: render on the server for speed and SEO, hydrate on the client for interactivity, and stream the parts that are ready first.
-
-Through all of it, the fundamentals hold. Semantic HTML, accessible interfaces, fast load times, and clean data flow mattered ten years ago and will matter ten years from now. Tools churn; principles compound. The best investment is not chasing every framework but getting genuinely good at the things that never go out of style.`,
-    category: "Future",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=500&fit=crop",
-    readTime: "7 min read",
-    date: new Date("2023-12-15"),
-    likes: 45,
-    shares: 18,
-    views: 1500
-  },
-  {
-    slug: "creating-accessible-web-experiences",
-    title: "Creating Accessible Web Experiences",
-    excerpt: "Why accessibility matters and how to implement WCAG guidelines in your projects from the ground up.",
-    content: `Accessibility is not a feature you bolt on at the end. It is a way of building that assumes your users are diverse — using screen readers, keyboards, voice control, or simply a phone in bright sunlight. Build for that range from the start and you build a better product for everyone.
-
-Begin with semantic HTML, because it does more than you think for free. A real button element is focusable, clickable, and announced correctly by assistive technology without a single line of extra code. A div pretending to be a button needs roles, tabindex, and key handlers just to reach the same baseline — and usually gets one of them wrong. Use the element that means what you intend.
-
-Make the keyboard a first-class citizen. Try navigating your site with the Tab key alone. Can you reach every control? Is the focus ring visible? Does the order make sense? Many users never touch a mouse, and a keyboard trap — a modal you cannot escape without one — is a wall, not an inconvenience.
-
-Mind color and contrast. Text should stand clearly against its background, and color should never be the only way you convey meaning. If your only signal that a field failed is turning it red, a colorblind user sees nothing. Add an icon or a message.
-
-Describe the non-obvious with ARIA, but sparingly. Labels for icon-only buttons, live regions for dynamic updates, and roles where semantics fall short. The first rule of ARIA is to prefer native HTML whenever you can; ARIA patches gaps, it does not replace good structure.
-
-Accessibility also improves SEO, keyboard efficiency, and clarity for tired or distracted users. It is the rare investment that helps the people who need it most and everyone else besides.`,
-    category: "Accessibility",
-    image: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&h=500&fit=crop",
-    readTime: "6 min read",
-    date: new Date("2023-12-10"),
+    date: new Date("2025-01-20"),
     likes: 34,
-    shares: 14,
+    shares: 12,
     views: 890
   },
   {
-    slug: "advanced-css-grid-layouts",
-    title: "Advanced CSS Grid Layouts",
-    excerpt: "Master CSS Grid with complex layouts, responsive designs, and practical examples for modern web applications.",
-    content: `CSS Grid changed layout from a series of hacks into an actual design tool. Once it clicks, you stop fighting the browser and start describing the layout you want directly. Here are the ideas that take you past the basics.
+    slug: "building-eritrea-learn-academy",
+    title: "Building a Trilingual E-Learning Platform: Eritrea Learn Academy",
+    excerpt: "Designing a platform that serves Tigrigna, English, and Arabic speakers with placement tests, interactive lessons, and a WPM typing course.",
+    content: `Eritrea Learn Academy was the most personally meaningful project I have built. The Horn of Africa has a severe shortage of multilingual educational resources, and most platforms assume English fluency as a starting point. I wanted to build something that meets students where they are — whether they speak Tigrigna, English, or Arabic.
 
-Think in two dimensions. Flexbox arranges things along one axis; Grid controls rows and columns at the same time. That makes it the right tool for page-level structure — headers, sidebars, content, footers — where you care about both directions at once.
+The first challenge was typography. Three scripts — Latin, Ge'ez, and Arabic — each with their own typographic traditions, had to coexist in the same interface without looking chaotic. I used separate font stacks per language, loaded dynamically based on the active locale, and adjusted line-height and letter-spacing per script. The Ge'ez script, used for Tigrigna, needed extra vertical space; Arabic needed proper RTL handling at the layout level, not just text-align.
 
-Name your areas. Grid lets you sketch a layout as a little map of named regions, then assign each child to a name. The result reads almost like a diagram, and rearranging the page for mobile becomes a matter of redrawing that map inside a media query. It is the most maintainable layout technique CSS has ever had.
+Placement tests were the core educational feature. Rather than forcing every student to start at the same point, the test adapts: answer correctly and the next question is harder; get one wrong and it adjusts down. This gave me a chance to implement a simplified Item Response Theory model, which was fascinating to build.
 
-Let the grid be responsive on its own. The combination of repeat, auto-fit, and minmax creates layouts that reflow without any breakpoints at all: tell the browser "as many columns as fit, each at least this wide," and cards rearrange themselves from three across to one as the screen shrinks. Fewer media queries, fewer surprises.
+The typing course (WPM) was a fun addition. I built a real-time Word Per Minute tracker that measures accuracy, speed, and consistency across all three languages. Supporting Arabic keyboard layouts and Ge'ez phonetic input was a deep rabbit hole.
 
-Understand implicit versus explicit tracks. You define some rows and columns explicitly, but when content overflows them, Grid creates implicit tracks automatically. Controlling their size with grid-auto-rows keeps dynamic content — a list that grows, a feed that loads more — looking intentional rather than accidental.
+The trilingual UI toggle was surprisingly complex under the hood. Every UI string, every button label, every error message exists in three languages. I used a simple JSON dictionary approach rather than i18n libraries to keep the bundle small.
 
-Combine Grid with Flexbox rather than choosing between them. Grid for the overall page skeleton, Flexbox for aligning the contents inside each cell. Used together they cover essentially every layout you will meet, and they do it with clean, readable CSS that survives redesigns.`,
-    category: "CSS",
-    image: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=800&h=500&fit=crop",
-    readTime: "9 min read",
-    date: new Date("2023-12-05"),
-    likes: 29,
-    shares: 11,
-    views: 760
+Launched at er-learn-academy.vercel.app, this project showed me that inclusive design is not just about accessibility features — it is about fundamentally rethinking who your users are and what they need to feel welcome.`,
+    category: "Projects",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=500&fit=crop",
+    readTime: "10 min read",
+    date: new Date("2025-02-15"),
+    likes: 28,
+    shares: 15,
+    views: 720
   },
   {
-    slug: "serverless-architecture-guide",
-    title: "Serverless Architecture Guide",
-    excerpt: "Complete guide to building scalable applications with serverless functions and cloud infrastructure.",
-    content: `Serverless is a confusing name — there are still servers — but the idea underneath is genuinely useful: you write functions, and the platform handles running, scaling, and idling them for you. You stop thinking about machines and start thinking about code that runs on demand.
+    slug: "building-lumiere-ecommerce",
+    title: "Building Lumière: A Full-Stack E-Commerce Platform",
+    excerpt: "Deep dive into building a production-ready MERN e-commerce platform with Stripe payments, admin dashboard, and inventory management.",
+    content: `Lumière was my attempt to build a real, production-grade e-commerce platform from scratch — not a tutorial clone, but something I would feel comfortable handing to a client.
 
-The appeal is real. You pay only for actual execution, not for a box sitting idle at 3 a.m. Traffic spikes are absorbed automatically, because the platform simply spins up more copies of your function. And there is no operating system to patch or capacity to plan. For spiky, event-driven, or early-stage workloads, that is a lot of operational burden to shed.
+The tech stack centered on the MERN ecosystem with Stripe for payments and Redux for cart state management. The cart was the most nuanced piece: it had to persist across sessions, sync between tabs, handle stock changes gracefully, and calculate tax and shipping in real-time. I used localStorage for persistence and Redux for runtime state, with a middleware layer that kept them in sync.
 
-But there are trade-offs, and pretending otherwise leads to pain. Cold starts mean a function that has not run recently takes longer to respond the first time. Functions are stateless, so anything you want to remember has to live in a database or cache. And local development and debugging take more setup than a plain server, because the real environment lives in the cloud.
+Authentication was handled with JWT, with access and refresh token pairs. Access tokens live 15 minutes; refresh tokens last 7 days and are stored in an httpOnly cookie. This gives a good balance of security and UX — users stay logged in across sessions but token theft is limited.
 
-Design around those constraints. Keep functions small and single-purpose — one job each — so they start fast and stay easy to reason about. Push state into managed databases and object storage instead of local memory. Lean on the platform's event sources: a file upload, a queue message, a scheduled timer, or an HTTP request can each trigger exactly the function that handles it.
+The admin dashboard was a project in itself. Real-time sales charts, inventory alerts, order management with status workflows, and customer data — all behind an auth wall with role-based access. I used MongoDB aggregation pipelines for the analytics, which was a steep learning curve but incredibly powerful.
 
-Watch the costs. Serverless is cheap at low and spiky volume and can become expensive at steady high volume, where a plain server would be cheaper. The right answer is often a mix: serverless for the bursty edges, traditional servers for the constant core.
+Stripe integration required careful handling. Webhooks for payment confirmation, idempotency keys to prevent double charges, and proper error states for declined cards. I sandbox-tested dozens of edge cases — partial refunds, subscription cancellations, currency mismatches.
 
-Used with clear eyes, serverless removes a huge amount of undifferentiated work and lets a small team ship like a much larger one.`,
-    category: "Backend",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=500&fit=crop",
-    readTime: "11 min read",
-    date: new Date("2023-11-28"),
+The product search and filter system uses MongoDB text indexes combined with category and price range filters. I debated implementing Elasticsearch but the scale did not warrant it — MongoDB's built-in text search handled thousands of products with acceptable speed.
+
+Live at lumiere-store-coral.vercel.app, Lumière taught me that e-commerce is deceptively complex. Every feature — reviews, stock alerts, wishlists, promo codes — seems simple until you implement it. The art is knowing which features genuinely matter and which are scope creep in disguise.`,
+    category: "Projects",
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop",
+    readTime: "12 min read",
+    date: new Date("2025-03-10"),
+    likes: 45,
+    shares: 20,
+    views: 1340
+  },
+  {
+    slug: "building-ripple-realtime-chat",
+    title: "Building Ripple: Real-Time Chat with Socket.io and the MERN Stack",
+    excerpt: "How I built a real-time group chat application with channels, typing indicators, and online presence tracking using Socket.io.",
+    content: `Ripple was born from a simple need: I wanted a chat app that was fast, minimal, and actually real-time — not polling every few seconds pretending to be. Socket.io was the obvious choice for WebSocket-based communication, and the MERN stack handled the rest.
+
+The architecture is straightforward: the Express server doubles as an HTTP server for Socket.io, with namespaces and rooms mapping to chat channels. When a user joins a channel, they are added to a Socket.io room; messages broadcast to everyone in that room. Typing indicators are emitted as ephemeral events — they fire frequently and are never persisted, just relayed to other clients in the same room.
+
+Online presence was the trickiest feature. Users can be in multiple channels, and "online" means different things: active in the app, idle for a few minutes, or disconnected entirely. I implemented a heartbeat system: the client sends a ping every 30 seconds, and the server marks the user as offline if no ping arrives within 90 seconds. Socket.io's built-in disconnect event handles tab closes and network drops.
+
+The message model is simple — sender, content, channel, timestamp — but I added message reactions (emojis) and reply threading as stretch features. The threading required careful thought about display: each reply shows a preview of the original message, and clicking it scrolls you there.
+
+Authentication hooks into the same JWT system as my other projects, so users can use the same credentials across the portfolio ecosystem.
+
+Deployed on Railway at ripple-chat-one.vercel.app (the backend runs on Railway for persistent WebSocket connections), Ripple taught me that real-time features are humbling. Every optimistic UI update must account for the message that fails to send, the connection that drops mid-conversation, and the tab that sits dormant for hours.`,
+    category: "Projects",
+    image: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=800&h=500&fit=crop",
+    readTime: "9 min read",
+    date: new Date("2025-04-05"),
     likes: 52,
     shares: 24,
-    views: 1850
+    views: 1670
   },
   {
-    slug: "graphql-vs-rest-apis",
-    title: "GraphQL vs REST APIs",
-    excerpt: "Comparing GraphQL and REST to help you choose the right API architecture for your next project.",
-    content: `GraphQL versus REST is one of those debates that generates more heat than light, because the honest answer is "it depends." Both are good tools; they just optimize for different problems. Knowing which problem you have makes the choice easy.
+    slug: "building-pulse-analytics",
+    title: "Building Pulse Analytics: A Data Visualization Dashboard",
+    excerpt: "Building an interactive analytics dashboard with MongoDB aggregation pipelines, Chart.js, and real-time data updates.",
+    content: `Pulse Analytics started as a tool I wanted for my own projects — a single dashboard where I could see traffic, user behavior, and business metrics without juggling five different analytics services.
 
-REST organizes your API around resources, each with its own URL, manipulated with standard HTTP verbs. It is simple, universally understood, and plays beautifully with the web's existing machinery — caching, status codes, and proxies all just work. For an API whose shape is stable and whose clients want roughly the same data, REST is hard to beat. The friction shows up in two familiar ways: over-fetching, where an endpoint returns more than a screen needs, and under-fetching, where a screen has to call three endpoints to assemble one view.
+The data layer uses MongoDB aggregation pipelines extensively. Instead of pre-aggregating data, Pulse runs queries on demand with caching. The pipeline stages — match, group, project, sort, limit — compose into readable analytics functions. A typical daily-active-users query filters by date range, groups by unique userId, counts events, and returns a time series ready for charting.
 
-GraphQL flips that around. The client sends a query describing exactly the fields it wants, and the server returns precisely that — no more, no less — from a single endpoint. For rich, data-hungry front-ends, especially mobile apps on slow networks, that precision is a real advantage. It also gives you a strongly typed schema that doubles as living documentation.
+The frontend uses Chart.js with its React wrapper for the visualizations. Line charts for trends, bar charts for comparisons, doughnut charts for breakdowns. Each chart is a self-contained component that accepts data and configuration, making them reusable across dashboard views.
 
-The cost is complexity. Caching is harder because everything flows through one endpoint, and a careless query can ask the server to do an enormous amount of work, so you need depth limits and cost analysis. The tooling is excellent but there is more of it to learn and operate.
+Real-time updates were important. I used Server-Sent Events (SSE) rather than WebSockets for this — the data flow is one-directional (server to client), and SSE is simpler to implement and more resilient to reconnection. When new data arrives, the chart animates to the new state using Chart.js's built-in transition API.
 
-A useful rule of thumb: reach for REST when your data is resource-shaped and your clients are similar; reach for GraphQL when many different clients need many different slices of a complex graph. And remember it is not all-or-nothing — plenty of systems expose REST for simple public endpoints and GraphQL for their own demanding front-ends. Pick the tool that matches the shape of your problem, not the one that is trending.`,
-    category: "API",
-    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=500&fit=crop",
-    readTime: "8 min read",
-    date: new Date("2023-11-20"),
-    likes: 41,
-    shares: 16,
-    views: 1120
+The filter system lets users slice data by date range, event type, user segment, and custom dimensions. Filters compose: each selection narrows the aggregation pipeline, and the charts update simultaneously. Building a filter system that feels fast while running complex aggregations required careful indexing — compound indexes on (eventType, date, userId) made most queries sub-second.
+
+Dark mode was non-negotiable for an analytics tool that analysts stare at all day. The entire theme system is CSS custom properties swapped with a single class toggle on the root element.
+
+Live at pulse-analytics-dash.vercel.app, Pulse Analytics taught me that dashboards are one of those products where the design decisions — what to show, what to hide, what deserves a big number versus a small chart — matter more than any single technical feature.`,
+    category: "Projects",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop",
+    readTime: "11 min read",
+    date: new Date("2025-05-12"),
+    likes: 31,
+    shares: 14,
+    views: 1050
   },
   {
-    slug: "docker-for-developers",
-    title: "Docker for Developers",
-    excerpt: "Getting started with Docker containerization for consistent development and deployment environments.",
-    content: `"It works on my machine" is the oldest joke in software, and Docker is the punchline that finally makes it stop being funny. A container packages your app together with everything it needs to run — the runtime, the libraries, the system tools — so it behaves the same on your laptop, your teammate's laptop, and the production server.
+    slug: "building-taskflow-kanban",
+    title: "Building TaskFlow: A Kanban Project Management App",
+    excerpt: "Lessons from building a drag-and-drop Kanban board with real-time collaboration, user stories, and sprint planning.",
+    content: `TaskFlow is a Kanban-style project management tool inspired by Jira and Trello but built for smaller teams who want something simpler. The core mechanic is drag and drop — moving cards between columns should feel immediate and satisfying.
 
-Two concepts do most of the work. An image is a frozen snapshot of your app and its environment, built from a recipe called a Dockerfile. A container is a running instance of that image. You build an image once and run it anywhere Docker exists, which is essentially everywhere.
+The drag-and-drop implementation uses the HTML5 Drag and Drop API with a custom state management layer. When a card is dropped in a new column, the state updates optimistically, and the API call fires in the background. If the call fails, the card bounces back to its original position with an animation — a pattern borrowed from optimistic UI design.
 
-The Dockerfile is where the craft lives. You start from a base image, copy your code in, install dependencies, and declare the command that starts the app. Two habits pay off immediately: order your steps so the rarely-changing ones come first, letting Docker cache them and rebuild fast; and use multi-stage builds so your final image contains only what runs in production, not the whole build toolchain. A lean image ships faster and has a smaller attack surface.
+The data model has three levels: boards contain columns, columns contain cards, and cards contain tasks. Each card has a status that determines which column it lives in, but changing the status also triggers workflow rules — moving a card to "Done" automatically assigns a completion date and sends a notification to the board owner.
 
-For local development, Docker Compose is the piece that makes it pleasant. One file describes every service your app needs — the web server, the database, the cache — and a single command brings the whole stack up, wired together, ready to go. A new developer clones the repo, runs one command, and has a working environment in minutes instead of a day of setup.
+User stories are first-class entities. Each card can have an associated story with acceptance criteria, priority, story points, and assignees. The sprint planning view aggregates story points across cards and shows team capacity at a glance.
 
-Keep a few principles in mind: one main process per container, configuration through environment variables rather than baked-in secrets, and data that must survive stored in named volumes rather than inside the container. Get those right and Docker turns environment drift from a recurring headache into a solved problem — which is exactly the kind of problem worth solving once.`,
-    category: "DevOps",
-    image: "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&h=500&fit=crop",
+Real-time collaboration uses the same Socket.io approach I refined in Ripple. When a user moves a card, the event broadcasts to all other users viewing the same board. Conflict resolution was tricky: if two users move the same card simultaneously, the last write wins, with a brief flash notification to alert the other user.
+
+Authentication ties into the same JWT system used across my projects. Users can create personal boards or join team boards via invite links.
+
+Deployed at taskflow-kanban-wine.vercel.app, TaskFlow taught me that project management tools are fundamentally about communication, not organization. The best features are the ones that reduce the need for status meetings — automatic progress tracking, blockers flagged during daily standups, and visibility into who is working on what.`,
+    category: "Projects",
+    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=500&fit=crop",
     readTime: "10 min read",
-    date: new Date("2023-11-15"),
-    likes: 48,
-    shares: 22,
-    views: 1680
+    date: new Date("2025-06-01"),
+    likes: 38,
+    shares: 17,
+    views: 1180
   },
   {
-    slug: "state-management-2024",
-    title: "State Management in 2024",
-    excerpt: "Redux, Zustand, Jotai, or Context? A comprehensive comparison of state management solutions.",
-    content: `State management in React used to mean one thing: Redux. Today there is a whole spectrum of options, and the healthiest mindset is that you probably need less global state than you think. Before reaching for any library, ask whether the state is really global at all.
+    slug: "building-luxury-portfolio",
+    title: "Building My Luxury Portfolio: A Case Study in Design and Performance",
+    excerpt: "The design decisions, performance optimizations, and technical challenges behind building amar-shesheno-luxury.vercel.app.",
+    content: `My portfolio site (the one you are reading this on) went through three major iterations before I was happy with it. The first version was a generic React template — functional but forgettable. The second tried too hard, with Three.js 3D scenes that crashed on mobile. The third, the current version, finds the balance.
 
-A lot of "state" is server state — data you fetched from an API. That is not what Redux was built for, and tools like React Query or SWR handle it far better: caching, background refetching, and loading states come for free. Pulling server data out of your global store often shrinks it dramatically and removes a class of bugs around stale data.
+The visual identity is inspired by luxury brands: dark, warm tones (#0d0705 background), serif typography for headings (Playfair Display), monospace for UI text (JetBrains Mono), and gold (#D4AF37) as the accent color. The overall feel should be like walking into a well-designed hotel lobby — calm, intentional, expensive.
 
-What remains is genuine client state, and here the choices differ mostly in philosophy. Redux Toolkit is the modern, boilerplate-light version of the classic. Its predictable, centralized store and excellent devtools shine in large apps with complex, interconnected logic and big teams who benefit from strict conventions.
+Performance was a battle. The original bundle was 627KB. I removed Three.js entirely (it added 257KB for a hero animation that played once), replaced it with pure CSS and Framer Motion. The FlipCard on the hero had four concurrent repeat: Infinity Framer Motion loops that caused constant GPU re-renders on mobile - removing them dropped bundle size to 132KB and made the site smooth on any device.
 
-Zustand takes the opposite stance: a tiny, unopinionated store you can set up in a few lines, with no providers to wire up. For most apps it delivers the benefits of a global store without the ceremony, which is why it has become many developers' default.
+The preloader was another learning experience. The first version used a heavy star particle animation that lagged on low-end phones. I replaced it with a Framer Motion star formation — 10 particles assembling into a star shape with spring physics — which looks just as good at a fraction of the cost.
 
-Jotai and its atomic cousins model state as small, independent pieces you compose together. When different parts of your UI subscribe to different slivers of state, this approach avoids unnecessary re-renders and feels natural.
+Content strategy shaped the architecture. Every project has a case study page (the one you are reading). Blogs are API-driven so I can write and publish without redeploying. The timeline merges career, skills, and education into one horizontal scroll — no section feels like filler.
 
-And do not forget Context, which ships with React. For low-frequency global values — the current theme, the logged-in user — it is perfectly adequate. Its weakness is frequent updates, which can re-render large trees, so keep hot state out of it.
+The stack is deliberately minimal: React with CRA (I know, but it works), Express on the backend, MongoDB for the database, and Vercel for hosting. No Next.js, no Gatsby, no framework-of-the-month. Simple tools used well outperform complex setups every time.
 
-The right answer is rarely one tool. Server state to a query library, simple globals to Context, and a focused store for the rest. Match the tool to the kind of state, and the architecture stays calm as the app grows.`,
-    category: "React",
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=500&fit=crop",
-    readTime: "7 min read",
-    date: new Date("2023-11-08"),
-    likes: 37,
-    shares: 13,
-    views: 950
+This portfolio taught me more than any client project. Building for yourself means there is no one to blame but you, and no one to please but you — which is both liberating and terrifying.`,
+    category: "Projects",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop",
+    readTime: "12 min read",
+    date: new Date("2025-06-20"),
+    likes: 56,
+    shares: 28,
+    views: 2100
+  },
+  {
+    slug: "my-language-learning-journey",
+    title: "My Language Learning Journey: Speaking 7 Languages",
+    excerpt: "How I learned English, Arabic, Amharic, Tigrigna, Korean, Russian, and Chinese — and what each language taught me beyond words.",
+    content: `I speak seven languages: English, Arabic, Amharic, Tigrigna, Korean, Russian, and Chinese. People usually assume I grew up multilingual (true — Tigrigna and Arabic at home) or that I have a natural gift (not really). The truth is more about curiosity, discipline, and a willingness to sound ridiculous for years.
+
+Tigrigna and Arabic came first. Tigrigna is my mother tongue, spoken in my household in Eritrea. Arabic surrounds you in the region — media, trade, neighbors — so I absorbed it naturally. These two gave me the foundation: once you have internalized that the same idea can be expressed in completely different grammatical structures, picking up new languages stops feeling like starting from zero.
+
+English was the first language I chose to learn. I consumed English media obsessively — YouTube tutorials about programming, American TV shows (Friends on repeat), tech documentation, Stack Overflow. The key insight is that input drives output. I did not force myself to speak; I just listened and read until the patterns became automatic. One day I realized I could think in English without translating in my head.
+
+Amharic came from my Ethiopian connections. It shares roots with Tigrigna (both Semitic languages from the Horn of Africa), which made it easier. The Ge'ez script is similar, and about 40% of the vocabulary overlaps. Learning Amharic taught me that related languages are a shortcut, not a cheat code — you still have to do the work, but you move faster.
+
+Korean was the hardest. I learned it because I fell in love with Korean culture — the music, the films, the food — and wanted to consume it without a filter. Hangul is the most logical writing system ever invented (you can learn it in a day), but the grammar is structurally opposite to Semitic languages. Subject-Object-Verb instead of Verb-Subject-Object. Honorifics that change verb forms based on social hierarchy. It took me two years of daily practice to reach conversational fluency.
+
+Russian was a practical choice: I wanted to access Eastern European tech communities and literature. The Cyrillic alphabet took a weekend. The grammar — cases, gendered nouns, perfective/imperfective verb pairs — took much longer. Russian taught me that some languages reward academic study (grammar drills, declension tables) more than immersion.
+
+Chinese (Mandarin) is my newest language. I started because I work with Chinese developers and wanted to understand their perspective. The tones were terrifying at first — four tones plus a neutral tone, where the wrong pitch changes the word entirely. I still struggle with production, but listening comprehension has improved dramatically through daily podcasts and drama watching.
+
+What I have learned across all seven languages is that the process is always the same: massive input, patient output, and zero embarrassment about making mistakes. Apps help (I use Anki for spaced repetition and HelloTalk for conversation partners), but nothing replaces the willingness to say something wrong and let someone correct you.
+
+Programming and language learning feel surprisingly similar. Both are about pattern recognition, constant practice, and building systems in your head. Every language I learn makes me a better developer, because it trains my brain to hold multiple abstract systems simultaneously — which is exactly what debugging requires.`,
+    category: "Languages",
+    image: "https://images.unsplash.com/photo-1526378722484-bd91ca387e08?w=800&h=500&fit=crop",
+    readTime: "15 min read",
+    date: new Date("2025-07-01"),
+    likes: 89,
+    shares: 42,
+    views: 3200
+  },
+  {
+    slug: "learning-korean-as-a-developer",
+    title: "Learning Korean as a Developer: How I Applied Programming Logic to Language Learning",
+    excerpt: "Using spaced repetition, pattern recognition, and systematic thinking to master Korean grammar and vocabulary.",
+    content: `When I decided to learn Korean, I approached it the same way I approach a new framework: break it down into components, understand the grammar (the API), build vocabulary (the library), and practice until the patterns become automatic.
+
+Hangul, the Korean alphabet, is the most elegant writing system in the world. King Sejong invented it in the 15th century specifically to be easy to learn. Each consonant mimics the shape of the mouth making the sound; vowels represent heaven, earth, and humanity. I learned to read and write in about four hours — not fluently, but enough to sound out words. As a developer, I appreciated that level of intentional design.
+
+Korean grammar was the real challenge. It is Subject-Object-Verb, which means the verb comes at the end of the sentence — the opposite of English and most Semitic languages. This rewires how you think about sentence structure. I made flashcards with Anki (a spaced repetition system similar to how you would memorize API endpoints) and reviewed them daily. The key was consistency, not intensity: 20 minutes every day beat two hours once a week.
+
+Honorifics in Korean are like middleware in Express. Depending on who you are talking to, the verb ending changes. Speaking to a friend uses casual form (-아/어); to a stranger or elder, polite form (-아요/어요); in formal settings, formal form (-습니다). Each level has its own conjugation rules. I visualized them as middleware layers that transform the same base verb based on context.
+
+Vocabulary acquisition followed the same pattern as learning a new programming language's standard library. I focused on the most common 1000 words first, which cover about 80% of everyday conversation. Tools like Quizlet and Memrise helped, but the real breakthrough was consuming native content. Korean variety shows (Running Man), K-dramas (Crash Landing on You), and K-pop lyrics became my immersion environment.
+
+Listening comprehension was the hardest skill. Korean has sounds that do not exist in Arabic, Tigrigna, or English — the tense consonants (ㄲ, ㄸ, ㅃ, ㅆ, ㅉ) and complex vowel combinations. I trained my ear by watching content with Korean subtitles, pausing and repeating lines aloud. Shadowing — speaking simultaneously with a native speaker — was the most effective technique.
+
+After two years of consistent practice, I reached conversational fluency. I can hold a 30-minute conversation, understand K-dramas without subtitles (mostly), and read Korean tech blogs. The journey taught me that language learning, like programming, is less about talent and more about systematic practice and the willingness to be a beginner again.
+
+To other developers learning a language: use the same skills you use at work. Break problems into small pieces. Use spaced repetition for review. Read the documentation (grammar guides). Build projects (have conversations). And most importantly, commit every day — even if it is just five minutes.`,
+    category: "Languages",
+    image: "https://images.unsplash.com/photo-1504208434309-cb69f4fe52b0?w=800&h=500&fit=crop",
+    readTime: "10 min read",
+    date: new Date("2025-07-03"),
+    likes: 67,
+    shares: 31,
+    views: 2400
+  },
+  {
+    slug: "my-coding-journey",
+    title: "From Zero to Full-Stack: My Coding Journey After July 2024",
+    excerpt: "How I went from writing my first line of code to building full-stack applications in less than a year.",
+    content: `I wrote my first line of code in July 2024. Before that, I was a language learner and a curious observer of technology — I knew what software could do, but I had no idea how it worked. Twelve months later, I have built seven full-stack applications, deployed them to production, and am writing this on my own portfolio site.
+
+The beginning was chaotic. I started with freeCodeCamp's Responsive Web Design track, which taught me HTML and CSS. The first time I centered a div (using flexbox, not the 2003 way with margin: 0 auto and a clearfix), I felt like a wizard. Weeks later, flexbox felt obvious. That gap between "this is magic" and "this is obvious" is where all the learning happens, and I learned to chase that feeling.
+
+JavaScript was the humbling part. I thought I understood it from the freeCodeCamp curriculum, but building my first interactive project — a to-do app — revealed how little I knew. Closures, prototypal inheritance, the event loop, promises — these concepts took months to click, not days. I failed at building that to-do app three times before it worked. Each failure taught me something the tutorials had skipped.
+
+I chose React as my first framework because it was the most in-demand skill on job boards. Big mistake, in hindsight — I should have mastered vanilla JavaScript first. But necessity is a great teacher. Building with React forced me to learn state management, component lifecycles, and the virtual DOM. I still reach for vanilla JS when I can, but React taught me to think in components, which is a genuinely valuable mental model.
+
+The MERN stack came naturally after that. MongoDB's document model made sense to someone who thought of data as JSON objects. Express was just JavaScript functions with some added structure. Node.js let me use the language I was already learning everywhere. Full-stack JavaScript is not the best technical choice for every project, but it is the best learning choice for a beginner because you only need to be good at one language.
+
+Building seven projects in under a year meant I had to be ruthlessly pragmatic. No perfectionism — ship a working version, then iterate. I learned that the second version of a project is always better than the first, because the first taught you what the problem actually is. The first version of my portfolio had a Three.js 3D scene that crashed on mobile. The second version removed it and was instantly better.
+
+Languages helped my coding more than I expected. Learning seven languages trained my brain to hold multiple abstract systems simultaneously — the same skill you need when you context-switch between frontend, backend, database, and DevOps. Pattern recognition transfers directly: once you have learned to recognize grammatical patterns in a foreign language, recognizing code patterns is the same skill applied to a different domain.
+
+If I could give one piece of advice to someone starting today: build something real. Not another tutorial project, not another course. Something you actually want to use. The bugs you will encounter building a real project teach you more than any tutorial ever could. I learned more from my broken to-do app than from a hundred hours of video courses.
+
+My journey is proof that you do not need a computer science degree, a bootcamp, or a decade of experience to build real software. You need curiosity, discipline, and the willingness to fail publicly. The rest is just syntax.`,
+    category: "Personal",
+    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=500&fit=crop",
+    readTime: "12 min read",
+    date: new Date("2025-07-02"),
+    likes: 95,
+    shares: 48,
+    views: 3800
   }
 ];
 

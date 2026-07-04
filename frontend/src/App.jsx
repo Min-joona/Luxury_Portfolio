@@ -15,7 +15,10 @@ import ProjectDetail from './components/ProjectDetail';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import AdminBlogs from './components/AdminBlogs';
+import AdminProjects from './components/AdminProjects';
+import AdminDesigns from './components/AdminDesigns';
 import AdminMessages from './components/AdminMessages';
+import AdminSettings from './components/AdminSettings';
 import NotFound from './components/NotFound';
 
 // Home component for the main page
@@ -87,7 +90,10 @@ function App() {
             <Route path="/admin/login" element={<AdminLogin darkMode={darkMode} />} />
             <Route path="/admin" element={<AdminDashboard darkMode={darkMode} setDarkMode={setDarkMode} />} />
             <Route path="/admin/blogs" element={<AdminBlogs darkMode={darkMode} />} />
+            <Route path="/admin/projects" element={<AdminProjects darkMode={darkMode} />} />
+            <Route path="/admin/designs" element={<AdminDesigns darkMode={darkMode} />} />
             <Route path="/admin/messages" element={<AdminMessages darkMode={darkMode} />} />
+            <Route path="/admin/settings" element={<AdminSettings darkMode={darkMode} />} />
             <Route path="*" element={<NotFound darkMode={darkMode} />} />
           </Routes>
         </Router>

@@ -1,15 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Plus, Edit2, Trash2, ArrowLeft, Save, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, ArrowLeft, Save, X, Upload } from 'lucide-react';
 import { api } from '../api';
+
+const CLOUD_NAME = 'dxvvpresa';
+const UPLOAD_PRESET = 'portfolio_uploads';
 
 const AdminBlogs = ({ darkMode }) => {
   const navigate = useNavigate();
+  const fileRef = useRef();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingBlog, setEditingBlog] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -107,7 +112,13 @@ const AdminBlogs = ({ darkMode }) => {
                   <input type="text" placeholder="Slug (URL-friendly name)" value={formData.slug} onChange={(e) => setFormData({...formData, slug: e.target.value})} className={`px-4 py-3 rounded-lg border bg-transparent ${darkMode ? 'border-white/20 text-white' : 'border-[#1a1410]/20 text-[#1a1410]'}`} required />
                 </div>
                 <input type="text" placeholder="Category" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className={`w-full px-4 py-3 rounded-lg border bg-transparent ${darkMode ? 'border-white/20 text-white' : 'border-[#1a1410]/20 text-[#1a1410]'}`} required />
-                <input type="text" placeholder="Image URL" value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} className={`w-full px-4 py-3 rounded-lg border bg-transparent ${darkMode ? 'border-white/20 text-white' : 'border-[#1a1410]/20 text-[#1a1410]'}`} required />
+                <div className="flex gap-4">
+                  <input type="text" placeholder="Image URL" value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} className={`flex-1 px-4 py-3 rounded-lg border bg-transparent ${darkMode ? 'border-white/20 text-white' : 'border-[#1a1410]/20 text-[#1a1410]'}`} required />
+                  <button type="button" onClick={() => fileRef.current.click()} disabled={uploading} className={`flex items-center gap-2 px-4 py-3 rounded-lg font-mono text-sm border ${darkMode ? 'border-white/20 text-white' : 'border-[#1a1410]/20 text-[#1a1410]'}`}>
+                    <Upload size={16} /> {uploading ? '...' : 'Upload'}
+                  </button>
+                </div>
+                <input type="file" ref={fileRef} accept="image/*" className="hidden" onChange={e => { if (e.target.files[0]) { setUploading(true); const fd = new FormData(); fd.append('file', e.target.files[0]); fd.append('upload_preset', UPLOAD_PRESET); fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd }).then(r => r.json()).then(d => { setFormData(f => ({...f, image: d.secure_url})); setUploading(false); }).catch(() => setUploading(false)); } }} />
                 <input type="text" placeholder="Read Time (e.g., 5 min read)" value={formData.readTime} onChange={(e) => setFormData({...formData, readTime: e.target.value})} className={`w-full px-4 py-3 rounded-lg border bg-transparent ${darkMode ? 'border-white/20 text-white' : 'border-[#1a1410]/20 text-[#1a1410]'}`} required />
                 <textarea placeholder="Excerpt (short description)" value={formData.excerpt} onChange={(e) => setFormData({...formData, excerpt: e.target.value})} rows={3} className={`w-full px-4 py-3 rounded-lg border bg-transparent ${darkMode ? 'border-white/20 text-white' : 'border-[#1a1410]/20 text-[#1a1410]'}`} required />
                 <textarea placeholder="Full Content (Markdown supported)" value={formData.content} onChange={(e) => setFormData({...formData, content: e.target.value})} rows={10} className={`w-full px-4 py-3 rounded-lg border bg-transparent font-mono text-sm ${darkMode ? 'border-white/20 text-white' : 'border-[#1a1410]/20 text-[#1a1410]'}`} required />

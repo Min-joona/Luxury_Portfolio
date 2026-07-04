@@ -1,9 +1,144 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import projects from '../data/projectData';
+import { api } from '../api';
 
 const Projects = ({ darkMode }) => {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await api('/api/projects');
+        setProjects(data);
+      } catch (err) {
+        setError(err.message || 'Failed to load projects');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="projects" className="py-24 px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="mb-16"
+          >
+            <span className={`text-[10px] tracking-[0.3em] font-mono uppercase mb-4 block ${
+              darkMode ? 'text-white/50' : 'text-[#1a1410]/50'
+            }`}>
+              Selected Work
+            </span>
+            <h2 className={`font-serif text-5xl lg:text-6xl mb-6 ${
+              darkMode ? 'text-white' : 'text-[#1a1410]'
+            }`}>
+              Projects
+            </h2>
+            <p className={`text-sm max-w-lg font-mono ${
+              darkMode ? 'text-white/60' : 'text-[#1a1410]/60'
+            }`}>
+              Loading projects...
+            </p>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse">
+                <div className={`aspect-[4/3] rounded-xl mb-6 ${
+                  darkMode ? 'bg-[#2a2018]' : 'bg-[#e0d5cc]'
+                }`} />
+                <div className={`h-3 w-1/3 rounded mb-2 ${
+                  darkMode ? 'bg-white/10' : 'bg-[#1a1410]/10'
+                }`} />
+                <div className={`h-5 w-2/3 rounded mb-2 ${
+                  darkMode ? 'bg-white/10' : 'bg-[#1a1410]/10'
+                }`} />
+                <div className={`h-3 w-full rounded ${
+                  darkMode ? 'bg-white/10' : 'bg-[#1a1410]/10'
+                }`} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="projects" className="py-24 px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="mb-16"
+          >
+            <span className={`text-[10px] tracking-[0.3em] font-mono uppercase mb-4 block ${
+              darkMode ? 'text-white/50' : 'text-[#1a1410]/50'
+            }`}>
+              Selected Work
+            </span>
+            <h2 className={`font-serif text-5xl lg:text-6xl mb-6 ${
+              darkMode ? 'text-white' : 'text-[#1a1410]'
+            }`}>
+              Projects
+            </h2>
+            <p className={`text-sm max-w-lg font-mono ${
+              darkMode ? 'text-white/60' : 'text-[#1a1410]/60'
+            }`}>
+              Something went wrong loading projects. Please try again later.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!projects || projects.length === 0) {
+    return (
+      <section id="projects" className="py-24 px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="mb-16"
+          >
+            <span className={`text-[10px] tracking-[0.3em] font-mono uppercase mb-4 block ${
+              darkMode ? 'text-white/50' : 'text-[#1a1410]/50'
+            }`}>
+              Selected Work
+            </span>
+            <h2 className={`font-serif text-5xl lg:text-6xl mb-6 ${
+              darkMode ? 'text-white' : 'text-[#1a1410]'
+            }`}>
+              Projects
+            </h2>
+            <p className={`text-sm max-w-lg font-mono ${
+              darkMode ? 'text-white/60' : 'text-[#1a1410]/60'
+            }`}>
+              No projects to display yet. Check back soon.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="projects" className="py-24 px-6 lg:px-12">
       <div className="max-w-7xl mx-auto">
@@ -36,7 +171,7 @@ const Projects = ({ darkMode }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
             <motion.div
-              key={index}
+              key={project._id || index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

@@ -40,7 +40,7 @@ const ProjectDetail = ({ darkMode }) => {
             )}
             <a href={project.github} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 text-sm font-mono transition-colors ${darkMode ? 'text-white/70 hover:text-white' : 'text-[#1a1410]/70 hover:text-[#1a1410]'}`}>
               <Github size={16} />
-              Source
+              Star on GitHub
             </a>
           </div>
         </div>
@@ -165,8 +165,8 @@ const ProjectDetail = ({ darkMode }) => {
                     </a>
                   )}
                   <a href={project.github} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-3 text-sm font-mono transition-colors ${darkMode ? 'text-white/70 hover:text-white' : 'text-[#1a1410]/70 hover:text-[#1a1410]'}`}>
-                    <Github size={16} />
-                    Source Code
+                    ⭐ <Github size={16} />
+                    Star on GitHub
                   </a>
                 </div>
               </div>
