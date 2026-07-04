@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Save, Upload, User, Mail, Globe, Camera } from 'lucide-react';
+import { Save, Upload, User, Camera } from 'lucide-react';
+import AdminSidebar from './AdminSidebar';
 import { api } from '../api';
 
 const CLOUD_NAME = 'dxvvpresa';
@@ -63,14 +64,13 @@ const AdminSettings = ({ darkMode }) => {
   const update = (key, value) => setSettings(s => ({ ...s, [key]: value }));
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-[#0d0705]' : 'bg-[#e8ddd4]'}`}>
-      <div className="ml-64 p-8">
+    <div className="min-h-screen bg-[#0d0705] flex">
+      <AdminSidebar />
+      <main className="flex-1 ml-64 p-8">
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
-            <Link to="/admin" className={darkMode ? 'text-white/60 hover:text-white' : 'text-[#1a1410]/60 hover:text-[#1a1410]'}>
-              <ArrowLeft size={24} />
-            </Link>
-            <h2 className={`font-serif text-3xl ${darkMode ? 'text-white' : 'text-[#1a1410]'}`}>Profile Settings</h2>
+          <div className="mb-8">
+            <h2 className="font-serif text-3xl text-white">Settings</h2>
+            <p className="font-mono text-xs mt-1 text-white/40">Profile &amp; Social Links</p>
           </div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={`p-8 rounded-xl border ${darkMode ? 'bg-[#1a1410]/50 border-white/10' : 'bg-white border-[#1a1410]/10'}`}>
@@ -143,12 +143,13 @@ const AdminSettings = ({ darkMode }) => {
               </div>
             </div>
 
-            <button onClick={handleSave} disabled={saving} className={`mt-8 flex items-center gap-2 px-8 py-4 rounded-lg font-mono text-sm ${saving ? 'opacity-50' : ''} ${darkMode ? 'bg-white text-[#1a1410]' : 'bg-[#1a1410] text-white'}`}>
+            <button onClick={handleSave} disabled={saving}
+              className="mt-8 flex items-center gap-2 px-8 py-4 rounded-lg bg-[#D4AF37] text-[#0d0705] font-mono text-sm hover:bg-[#D4AF37]/90 transition-all disabled:opacity-50">
               <Save size={18} /> {saving ? 'Saving...' : 'Save Settings'}
             </button>
           </motion.div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

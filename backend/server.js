@@ -67,6 +67,7 @@ app.use('/api/blogs', require('./routes/blogs'));
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/designs', require('./routes/designs'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/timeline', require('./routes/timeline'));
 
 const PageView = require('./models/PageView');
 app.post('/api/track', async (req, res) => {

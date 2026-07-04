@@ -1,44 +1,47 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Routes, Route, Link } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  FolderKanban, 
-  Palette,
-  Settings,
-  MessageSquare, 
-  LogOut,
-  TrendingUp,
-  Eye,
-  Heart,
-  Share2,
-  Users
+import { useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import {
+  LayoutDashboard, FileText, FolderKanban, Palette, Clock,
+  MessageSquare, Settings, LogOut, Eye, Heart, Share2,
+  MessageCircle, Mail,
 } from 'lucide-react';
+import AdminSidebar from './AdminSidebar';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, LineChart, Line,
+} from 'recharts';
 import { api } from '../api';
 
-const AdminDashboard = ({ darkMode }) => {
+const GOLD = '#D4AF37';
+const GOLD_DIM = 'rgba(212,175,55,0.1)';
+const GOLD_BORDER = 'rgba(212,175,55,0.25)';
+const COLORS = ['#D4AF37', '#C49B2E', '#B8860B', '#A0762C', '#8B6914', '#DAA520', '#CD9B1D'];
+
+const AdminDashboard = ({ darkMode = true }) => {
   const navigate = useNavigate();
-  const [stats, setStats] = useState(null);
+  const location = useLocation();
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [topBlogs, setTopBlogs] = useState([]);
 
   useEffect(() => {
-    checkAuth();
+    const token = localStorage.getItem('adminToken');
+    if (!token) { navigate('/admin/login'); return; }
+    }
     fetchAnalytics();
   }, []);
 
-  const checkAuth = () => {
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
-      navigate('/admin/login');
-    }
-  };
-
   const fetchAnalytics = async () => {
     try {
-      const data = await api('/api/admin/analytics');
-      setStats(data.stats);
-      setTopBlogs(data.topBlogs);
+      const res = await api('/api/admin/analytics');
+      setData(res);
+      const { stats, pageViews, topBlogs, categoryBreakdown, viewsOverTime, recentMessages } = res;
+      setStats(stats);
+      setPageViews(pageViews || []);
+      setTopBlogs(topBlogs || []);
+      setCategoryBreakdown(categoryBreakdown || []);
+      setViewsOverTime(viewsOverTime || []);
+      setRecentMessages(recentMessages || []);
       setLoading(false);
     } catch (error) {
       if (error.message === 'HTTP 401' || error.message === 'HTTP 403') {
@@ -58,313 +61,263 @@ const AdminDashboard = ({ darkMode }) => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${
-        darkMode ? 'bg-[#0d0705]' : 'bg-[#e8ddd4]'
-      }`}>
-        <div className="text-center">
-          <div className={`w-16 h-16 mx-auto mb-4 rounded-full animate-pulse ${
-            darkMode ? 'bg-white/20' : 'bg-[#1a1410]/20'
-          }`} />
-          <p className={darkMode ? 'text-white/60' : 'text-[#1a1410]/60'}>
-            Loading dashboard...
+      <div className="min-h-screen bg-[#0d0705] flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center"
+        >
+          <div className="w-10 h-10 mx-auto mb-6 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
+          <p className="font-mono text-xs text-white/30 tracking-[0.2em] uppercase">
+            Loading dashboard
           </p>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
+  if (!data) return null;
+
+  const { stats = {}, topBlogs = [], categoryBreakdown = [], viewsOverTime = [], pageViews = [], recentMessages = [] } = data;
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.05 },
+    },
+  };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
+  };
+
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-[#0d0705]' : 'bg-[#e8ddd4]'}`}>
-      {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 h-full w-64 border-r ${
-        darkMode 
-          ? 'bg-[#1a1410] border-white/10' 
-          : 'bg-white border-[#1a1410]/10'
-      }`}>
-        <div className="p-6">
-          <h1 className={`font-serif text-2xl mb-8 ${
-            darkMode ? 'text-white' : 'text-[#1a1410]'
-          }`}>
-            Admin Panel
-          </h1>
-          
-          <nav className="space-y-2">
-            <Link
-              to="/admin"
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                darkMode 
-                  ? 'text-white/70 hover:bg-white/10 hover:text-white' 
-                  : 'text-[#1a1410]/70 hover:bg-[#1a1410]/10 hover:text-[#1a1410]'
-              }`}
-            >
-              <LayoutDashboard size={20} />
-              <span className="font-mono text-sm">Dashboard</span>
-            </Link>
-            
-            <Link
-              to="/admin/blogs"
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                darkMode 
-                  ? 'text-white/70 hover:bg-white/10 hover:text-white' 
-                  : 'text-[#1a1410]/70 hover:bg-[#1a1410]/10 hover:text-[#1a1410]'
-              }`}
-            >
-              <FileText size={20} />
-              <span className="font-mono text-sm">Blogs</span>
-            </Link>
-            
-            <Link
-              to="/admin/projects"
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                darkMode 
-                  ? 'text-white/70 hover:bg-white/10 hover:text-white' 
-                  : 'text-[#1a1410]/70 hover:bg-[#1a1410]/10 hover:text-[#1a1410]'
-              }`}
-            >
-              <FolderKanban size={20} />
-              <span className="font-mono text-sm">Projects</span>
-            </Link>
-            
-            <Link
-              to="/admin/designs"
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                darkMode 
-                  ? 'text-white/70 hover:bg-white/10 hover:text-white' 
-                  : 'text-[#1a1410]/70 hover:bg-[#1a1410]/10 hover:text-[#1a1410]'
-              }`}
-            >
-              <Palette size={20} />
-              <span className="font-mono text-sm">Designs</span>
-            </Link>
+    <div className="min-h-screen bg-[#0d0705] flex">
+      <AdminSidebar />
 
-            <Link
-              to="/admin/messages"
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                darkMode 
-                  ? 'text-white/70 hover:bg-white/10 hover:text-white' 
-                  : 'text-[#1a1410]/70 hover:bg-[#1a1410]/10 hover:text-[#1a1410]'
-              }`}
-            >
-              <MessageSquare size={20} />
-              <span className="font-mono text-sm">Messages</span>
-            </Link>
+      <main className="flex-1 ml-64 p-8 lg:p-10">
+        <div className="max-w-7xl mx-auto">
+          <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-10">
+            <h1 className="font-serif text-3xl text-white mb-1 tracking-wide">
+              Dashboard
+            </h1>
+            <p className="font-mono text-xs text-white/20 tracking-[0.2em] uppercase">
+              Overview &amp; Analytics
+            </p>
+          </motion.div>
 
-            <Link
-              to="/admin/settings"
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                darkMode 
-                  ? 'text-white/70 hover:bg-white/10 hover:text-white' 
-                  : 'text-[#1a1410]/70 hover:bg-[#1a1410]/10 hover:text-[#1a1410]'
-              }`}
-            >
-              <Settings size={20} />
-              <span className="font-mono text-sm">Settings</span>
-            </Link>
-          </nav>
-        </div>
-        
-        {/* Logout */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/10">
-          <button
-            onClick={handleLogout}
-            className={`flex items-center gap-3 px-4 py-3 w-full rounded-lg transition-colors ${
-              darkMode 
-                ? 'text-red-400 hover:bg-red-500/10' 
-                : 'text-red-600 hover:bg-red-500/10'
-            }`}
-          >
-            <LogOut size={20} />
-            <span className="font-mono text-sm">Logout</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="ml-64 p-8">
-        <div className="max-w-6xl mx-auto">
-          <h2 className={`font-serif text-3xl mb-8 ${
-            darkMode ? 'text-white' : 'text-[#1a1410]'
-          }`}>
-            Dashboard Overview
-          </h2>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard
-              title="Total Blogs"
-              value={stats?.totalBlogs || 0}
-              icon={FileText}
-              trend="+2 this week"
-              darkMode={darkMode}
-            />
-            <StatCard
-              title="Total Views"
-              value={stats?.totalViews || 0}
-              icon={Eye}
-              trend="+124 today"
-              darkMode={darkMode}
-            />
-            <StatCard
-              title="Total Likes"
-              value={stats?.totalLikes || 0}
-              icon={Heart}
-              trend="+18 today"
-              darkMode={darkMode}
-            />
-            <StatCard
-              title="Messages"
-              value={stats?.totalMessages || 0}
-              icon={MessageSquare}
-              trend="3 unread"
-              darkMode={darkMode}
-            />
-          </div>
-
-          {/* Additional Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className={`p-6 rounded-xl border ${
-              darkMode 
-                ? 'bg-[#1a1410]/50 border-white/10' 
-                : 'bg-white border-[#1a1410]/10'
-            }`}>
-              <div className="flex items-center gap-4 mb-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  darkMode ? 'bg-[#5D4037]' : 'bg-[#8D6E63]'
-                }`}>
-                  <Share2 size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className={`text-sm font-mono ${
-                    darkMode ? 'text-white/60' : 'text-[#1a1410]/60'
-                  }`}>
-                    Total Shares
-                  </p>
-                  <p className={`text-3xl font-serif ${
-                    darkMode ? 'text-white' : 'text-[#1a1410]'
-                  }`}>
-                    {stats?.totalShares || 0}
-                  </p>
-                </div>
+          <motion.div variants={container} initial="hidden" animate="show" className="space-y-10">
+            <motion.div variants={fadeUp}>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                <StatCard title="Total Blogs" value={stats.totalBlogs ?? 0} icon={FileText} delay={0} />
+                <StatCard title="Total Views" value={stats.totalViews ?? 0} icon={Eye} delay={0.05} />
+                <StatCard title="Total Likes" value={stats.totalLikes ?? 0} icon={Heart} delay={0.1} />
+                <StatCard title="Total Messages" value={stats.totalMessages ?? 0} icon={Mail} delay={0.15} />
               </div>
-            </div>
+            </motion.div>
 
-            <div className={`p-6 rounded-xl border ${
-              darkMode 
-                ? 'bg-[#1a1410]/50 border-white/10' 
-                : 'bg-white border-[#1a1410]/10'
-            }`}>
-              <div className="flex items-center gap-4 mb-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  darkMode ? 'bg-[#5D4037]' : 'bg-[#8D6E63]'
-                }`}>
-                  <TrendingUp size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className={`text-sm font-mono ${
-                    darkMode ? 'text-white/60' : 'text-[#1a1410]/60'
-                  }`}>
-                    Views This Week
-                  </p>
-                  <p className={`text-3xl font-serif ${
-                    darkMode ? 'text-white' : 'text-[#1a1410]'
-                  }`}>
-                    {stats?.recentViews || 0}
-                  </p>
-                </div>
+            <motion.div variants={fadeUp}>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                <StatCard title="Total Projects" value={stats.totalProjects ?? 0} icon={FolderKanban} delay={0.2} />
+                <StatCard title="Total Designs" value={stats.totalDesigns ?? 0} icon={Palette} delay={0.25} />
+                <StatCard title="Total Shares" value={stats.totalShares ?? 0} icon={Share2} delay={0.3} />
+                <StatCard title="Total Comments" value={stats.totalComments ?? 0} icon={MessageCircle} delay={0.35} />
               </div>
-            </div>
-          </div>
+            </motion.div>
 
-          {/* Top Performing Blogs */}
-          <div className={`rounded-xl border ${
-            darkMode 
-              ? 'bg-[#1a1410]/50 border-white/10' 
-              : 'bg-white border-[#1a1410]/10'
-          }`}>
-            <div className="p-6 border-b border-white/10">
-              <h3 className={`font-serif text-xl ${
-                darkMode ? 'text-white' : 'text-[#1a1410]'
-              }`}>
-                Top Performing Blogs
-              </h3>
-            </div>
-            <div className="p-6">
-              {topBlogs.length > 0 ? (
-                <div className="space-y-4">
-                  {topBlogs.map((blog, index) => (
-                    <div
-                      key={blog._id}
-                      className={`flex items-center justify-between p-4 rounded-lg ${
-                        darkMode ? 'bg-white/5' : 'bg-[#1a1410]/5'
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-mono ${
-                          darkMode ? 'bg-white/10 text-white' : 'bg-[#1a1410]/10 text-[#1a1410]'
-                        }`}>
-                          {index + 1}
-                        </span>
-                        <div>
-                          <p className={`font-medium ${
-                            darkMode ? 'text-white' : 'text-[#1a1410]'
-                          }`}>
-                            {blog.title}
-                          </p>
-                          <p className={`text-sm ${
-                            darkMode ? 'text-white/50' : 'text-[#1a1410]/50'
-                          }`}>
-                            {blog.views} views • {blog.likes} likes • {blog.shares} shares
-                          </p>
+            <motion.div variants={fadeUp}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <ChartCard title="Views Over Time" subtitle="Last 30 days">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={viewsOverTime} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                      <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" tick={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }} />
+                      <YAxis stroke="rgba(255,255,255,0.2)" tick={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }} />
+                      <Tooltip
+                        contentStyle={{ background: '#1a1410', border: `1px solid ${GOLD_BORDER}`, borderRadius: 8, color: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}
+                        labelStyle={{ color: GOLD, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}
+                        itemStyle={{ fontSize: 12 }}
+                      />
+                      <Bar dataKey="views" fill={GOLD} radius={[4, 4, 0, 0]} maxBarSize={20} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </ChartCard>
+
+                <ChartCard title="Category Breakdown" subtitle="Content distribution">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={categoryBreakdown}
+                        cx="50%" cy="50%"
+                        innerRadius={70}
+                        outerRadius={110}
+                        paddingAngle={3}
+                        dataKey="count"
+                        nameKey="name"
+                      >
+                        {categoryBreakdown.map((_, i) => (
+                          <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{ background: '#1a1410', border: `1px solid ${GOLD_BORDER}`, borderRadius: 8, color: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}
+                        labelStyle={{ color: GOLD, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}
+                        itemStyle={{ fontSize: 12 }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  {categoryBreakdown.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 mt-4">
+                      {categoryBreakdown.map((item, i) => (
+                        <div key={item.name} className="flex items-center gap-2">
+                          <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                          <span className="font-mono text-xs text-white/50">
+                            {item.name} <span className="text-white/30">({item.count})</span>
+                          </span>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
+                </ChartCard>
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeUp}>
+              <ChartCard title="Page Views" subtitle="Traffic over time">
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={pageViews} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                    <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" tick={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }} />
+                    <YAxis stroke="rgba(255,255,255,0.2)" tick={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }} />
+                    <Tooltip
+                      contentStyle={{ background: '#1a1410', border: `1px solid ${GOLD_BORDER}`, borderRadius: 8, color: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}
+                      labelStyle={{ color: GOLD, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}
+                      itemStyle={{ fontSize: 12 }}
+                    />
+                    <Line type="monotone" dataKey="count" stroke={GOLD} strokeWidth={2} dot={{ fill: GOLD, r: 3 }} activeDot={{ r: 5, fill: GOLD }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartCard>
+            </motion.div>
+
+            <motion.div variants={fadeUp}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-[#1a1410]/80 border border-white/[0.06] rounded-xl overflow-hidden backdrop-blur-sm">
+                  <div className="px-6 py-5 border-b border-white/[0.06]">
+                    <h3 className="font-serif text-lg text-white tracking-wide">Top Performing Blogs</h3>
+                  </div>
+                  <div className="p-6">
+                    {topBlogs.length > 0 ? (
+                      <div className="space-y-2">
+                        {topBlogs.map((blog, i) => (
+                          <div
+                            key={blog._id}
+                            className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <span className="shrink-0 w-7 h-7 rounded-full bg-[#D4AF37]/15 text-[#D4AF37] flex items-center justify-center text-xs font-mono font-bold">
+                                {i + 1}
+                              </span>
+                              <div className="min-w-0">
+                                <p className="text-sm text-white/85 font-medium truncate max-w-[200px]">
+                                  {blog.title}
+                                </p>
+                                <p className="text-xs text-white/35 font-mono mt-0.5">
+                                  {blog.views} views &middot; {blog.likes} likes &middot; {blog.shares} shares
+                                </p>
+                              </div>
+                            </div>
+                            <Eye size={14} className="shrink-0 text-white/15" />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-center py-10 text-white/25 font-mono text-sm">
+                        No blog data available
+                      </p>
+                    )}
+                  </div>
                 </div>
-              ) : (
-                <p className={`text-center py-8 ${
-                  darkMode ? 'text-white/40' : 'text-[#1a1410]/40'
-                }`}>
-                  No blog data available
-                </p>
-              )}
-            </div>
-          </div>
+
+                <div className="bg-[#1a1410]/80 border border-white/[0.06] rounded-xl overflow-hidden backdrop-blur-sm">
+                  <div className="px-6 py-5 border-b border-white/[0.06]">
+                    <h3 className="font-serif text-lg text-white tracking-wide">Recent Messages</h3>
+                  </div>
+                  <div className="p-6 max-h-[420px] overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
+                    {recentMessages.length > 0 ? (
+                      <div className="space-y-2">
+                        {recentMessages.map((msg, i) => (
+                          <div
+                            key={i}
+                            className="p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <p className="text-sm text-white/85 font-medium truncate">{msg.name}</p>
+                              <p className="text-xs text-white/30 font-mono shrink-0 ml-3">
+                                {new Date(msg.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                              </p>
+                            </div>
+                            <p className="text-xs text-white/40 font-mono mb-1.5 truncate">{msg.email}</p>
+                            <p className="text-xs text-white/50 leading-relaxed line-clamp-2">{msg.message}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-center py-10 text-white/25 font-mono text-sm">
+                        No messages yet
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </main>
     </div>
   );
 };
 
-// Stat Card Component
-const StatCard = ({ title, value, icon: Icon, trend, darkMode }) => (
-  <div className={`p-6 rounded-xl border ${
-    darkMode 
-      ? 'bg-[#1a1410]/50 border-white/10' 
-      : 'bg-white border-[#1a1410]/10'
-  }`}>
+
+
+const StatCard = ({ title, value, icon: Icon, delay }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+    className="bg-[#1a1410]/80 border border-white/[0.06] rounded-xl p-5 lg:p-6 backdrop-blur-sm hover:border-[#D4AF37]/20 transition-colors duration-300 group"
+  >
     <div className="flex items-center justify-between mb-4">
-      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-        darkMode ? 'bg-[#5D4037]' : 'bg-[#8D6E63]'
-      }`}>
-        <Icon size={24} className="text-white" />
+      <div className="w-11 h-11 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-colors">
+        <Icon size={20} className="text-[#D4AF37]" strokeWidth={1.5} />
       </div>
-      <span className={`text-xs font-mono ${
-        darkMode ? 'text-green-400' : 'text-green-600'
-      }`}>
-        {trend}
-      </span>
     </div>
-    <p className={`text-sm font-mono mb-1 ${
-      darkMode ? 'text-white/60' : 'text-[#1a1410]/60'
-    }`}>
+    <p className="font-mono text-xs text-white/35 tracking-wider uppercase mb-1">
       {title}
     </p>
-    <p className={`text-3xl font-serif ${
-      darkMode ? 'text-white' : 'text-[#1a1410]'
-    }`}>
-      {value.toLocaleString()}
+    <p className="font-serif text-3xl text-white tracking-wide">
+      {typeof value === 'number' ? value.toLocaleString() : value}
     </p>
-  </div>
+  </motion.div>
+);
+
+const ChartCard = ({ title, subtitle, children, delay = 0 }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+    className="bg-[#1a1410]/80 border border-white/[0.06] rounded-xl p-6 backdrop-blur-sm"
+  >
+    <div className="mb-5">
+      <h3 className="font-serif text-lg text-white tracking-wide">{title}</h3>
+      {subtitle && (
+        <p className="font-mono text-xs text-white/30 tracking-wider uppercase mt-1">{subtitle}</p>
+      )}
+    </div>
+    {children}
+  </motion.div>
 );
 
 export default AdminDashboard;
