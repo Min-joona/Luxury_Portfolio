@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Trash2, Save, X, Clock } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, X, Clock, Rocket, Award, Sparkles, Building2, Briefcase, GraduationCap, HeartPulse, Wrench } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
 import { api } from '../api';
 
