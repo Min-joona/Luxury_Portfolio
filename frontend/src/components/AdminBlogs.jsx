@@ -312,9 +312,8 @@ const AdminBlogs = ({ darkMode }) => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
-      {/* Form Modal */}
       <AnimatePresence>
         {showForm && (
           <motion.div
@@ -521,7 +520,6 @@ const AdminBlogs = ({ darkMode }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </main>
     </div>
   );
 };

@@ -32,13 +32,13 @@ const AdminMessages = ({ darkMode }) => {
   );
 
   return (
-    <div className="min-h-screen bg-[#0d0705]">
-      <div className="ml-64 p-8">
+    <div className="min-h-screen bg-[#0d0705] flex">
+      <AdminSidebar />
+      <main className="flex-1 ml-64 p-8">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
-            <Link to="/admin" className="text-white/40 hover:text-white transition-colors"><ArrowLeft size={24} /></Link>
+          <div className="mb-8">
             <h2 className="font-serif text-3xl text-white">Messages</h2>
-            <span className="text-white/30 font-mono text-sm">({messages.length})</span>
+            <p className="font-mono text-xs mt-1 text-white/40">{messages.length} messages</p>
           </div>
 
           <div className="space-y-4">
