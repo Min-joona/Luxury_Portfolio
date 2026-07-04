@@ -18,6 +18,10 @@
       }
     },
     {
+      "src": "/(sitemap.xml|robots.txt|favicon.ico|favicon.png|logo.png|apple-touch-icon.png|og-image.png)",
+      "dest": "/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

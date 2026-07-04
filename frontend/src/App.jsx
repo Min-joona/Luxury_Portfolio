@@ -2,11 +2,9 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Preloader from './components/Preloader';
-import FullPageSkeleton from './components/FullPageSkeleton';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Projects from './components/Projects';
-import Experience from './components/Experience';
 import Designs from './components/Designs';
 import Timeline from './components/Timeline';
 import Blogs from './components/Blogs';
@@ -43,7 +41,6 @@ const Home = ({ darkMode, setDarkMode }) => {
           transition={{ duration: 1 }}
         >
           <Projects darkMode={darkMode} />
-          <Experience darkMode={darkMode} />
           <Designs darkMode={darkMode} />
           <Timeline darkMode={darkMode} />
           <Blogs darkMode={darkMode} />
@@ -67,7 +64,6 @@ const Home = ({ darkMode, setDarkMode }) => {
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [contentReady, setContentReady] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -77,29 +73,10 @@ function App() {
     }
   }, [darkMode]);
 
-  // Simulate content loading after 3D is ready
-  useEffect(() => {
-    if (!loading) {
-      const timer = setTimeout(() => setContentReady(true), 800);
-      return () => clearTimeout(timer);
-    }
-  }, [loading]);
-
   return (
     <AnimatePresence mode="wait">
       {loading ? (
         <Preloader key="preloader" onLoadingComplete={() => setLoading(false)} />
-      ) : !contentReady ? (
-        // Show skeleton after preloader, before content loads
-        <motion.div
-          key="skeleton"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <FullPageSkeleton darkMode={darkMode} />
-        </motion.div>
       ) : (
         <Router>
           <Routes>

@@ -1,129 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Calendar, Clock, ChevronDown, ChevronUp } from 'lucide-react';
-
-const allBlogs = [
-  {
-    title: "Building Scalable React Applications",
-    excerpt: "Learn the best practices for architecting large-scale React applications with proper state management and component composition.",
-    category: "React",
-    date: "Jan 15, 2024",
-    readTime: "8 min read",
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=500&fit=crop",
-    slug: "building-scalable-react-applications",
-    content: "Full article content here..."
-  },
-  {
-    title: "The Art of Minimalist UI Design",
-    excerpt: "Exploring how less is more in modern web design. Creating elegant interfaces that prioritize user experience.",
-    category: "Design",
-    date: "Jan 08, 2024",
-    readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=500&fit=crop",
-    slug: "art-of-minimalist-ui-design",
-    content: "Full article content here..."
-  },
-  {
-    title: "Mastering TypeScript in 2024",
-    excerpt: "A comprehensive guide to TypeScript features that will level up your development workflow and catch bugs early.",
-    category: "TypeScript",
-    date: "Dec 28, 2023",
-    readTime: "12 min read",
-    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=500&fit=crop",
-    slug: "mastering-typescript-2024",
-    content: "Full article content here..."
-  },
-  {
-    title: "Performance Optimization Techniques",
-    excerpt: "Deep dive into web performance optimization strategies that can improve your site's loading speed by 300%.",
-    category: "Performance",
-    date: "Dec 20, 2023",
-    readTime: "10 min read",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop",
-    slug: "performance-optimization-techniques",
-    content: "Full article content here..."
-  },
-  {
-    title: "The Future of Web Development",
-    excerpt: "Exploring emerging technologies and trends that will shape the future of web development in the coming years.",
-    category: "Future",
-    date: "Dec 15, 2023",
-    readTime: "7 min read",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=500&fit=crop",
-    slug: "future-of-web-development",
-    content: "Full article content here..."
-  },
-  {
-    title: "Creating Accessible Web Experiences",
-    excerpt: "Why accessibility matters and how to implement WCAG guidelines in your projects from the ground up.",
-    category: "Accessibility",
-    date: "Dec 10, 2023",
-    readTime: "6 min read",
-    image: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&h=500&fit=crop",
-    slug: "creating-accessible-web-experiences",
-    content: "Full article content here..."
-  },
-  // Additional blogs that show on "View More"
-  {
-    title: "Advanced CSS Grid Layouts",
-    excerpt: "Master CSS Grid with complex layouts, responsive designs, and practical examples for modern web applications.",
-    category: "CSS",
-    date: "Dec 05, 2023",
-    readTime: "9 min read",
-    image: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=800&h=500&fit=crop",
-    slug: "advanced-css-grid-layouts",
-    content: "Full article content here..."
-  },
-  {
-    title: "Serverless Architecture Guide",
-    excerpt: "Complete guide to building scalable applications with serverless functions and cloud infrastructure.",
-    category: "Backend",
-    date: "Nov 28, 2023",
-    readTime: "11 min read",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=500&fit=crop",
-    slug: "serverless-architecture-guide",
-    content: "Full article content here..."
-  },
-  {
-    title: "GraphQL vs REST APIs",
-    excerpt: "Comparing GraphQL and REST to help you choose the right API architecture for your next project.",
-    category: "API",
-    date: "Nov 20, 2023",
-    readTime: "8 min read",
-    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=500&fit=crop",
-    slug: "graphql-vs-rest-apis",
-    content: "Full article content here..."
-  },
-  {
-    title: "Docker for Developers",
-    excerpt: "Getting started with Docker containerization for consistent development and deployment environments.",
-    category: "DevOps",
-    date: "Nov 15, 2023",
-    readTime: "10 min read",
-    image: "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&h=500&fit=crop",
-    slug: "docker-for-developers",
-    content: "Full article content here..."
-  },
-  {
-    title: "State Management in 2024",
-    excerpt: "Redux, Zustand, Jotai, or Context? A comprehensive comparison of state management solutions.",
-    category: "React",
-    date: "Nov 08, 2023",
-    readTime: "7 min read",
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=500&fit=crop",
-    slug: "state-management-2024",
-    content: "Full article content here..."
-  }
-];
+import API_URL from '../api';
 
 const INITIAL_DISPLAY_COUNT = 6;
 
 const Blogs = ({ darkMode }) => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
-  
-  const displayedBlogs = showAll ? allBlogs : allBlogs.slice(0, INITIAL_DISPLAY_COUNT);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/blogs`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
+      setBlogs(data);
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const displayedBlogs = showAll ? blogs : blogs.slice(0, INITIAL_DISPLAY_COUNT);
   const featuredBlog = displayedBlogs[0];
   const gridBlogs = displayedBlogs.slice(1);
+
+  if (loading) {
+    return (
+      <section id="blogs" className="py-24 px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-16">
+            <div className={`w-24 h-3 rounded mb-4 ${darkMode ? 'bg-white/10' : 'bg-[#1a1410]/10'}`} />
+            <div className={`w-32 h-14 rounded mb-6 ${darkMode ? 'bg-white/10' : 'bg-[#1a1410]/10'}`} />
+            <div className={`w-80 h-4 rounded ${darkMode ? 'bg-white/10' : 'bg-[#1a1410]/10'}`} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className={`aspect-[16/10] rounded-xl ${darkMode ? 'bg-white/5' : 'bg-[#1a1410]/5'}`} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!blogs.length) {
+    return (
+      <section id="blogs" className="py-24 px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto text-center">
+          <p className={`text-sm font-mono ${darkMode ? 'text-white/50' : 'text-[#1a1410]/50'}`}>
+            No articles yet. Check back soon.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="blogs" className="py-24 px-6 lg:px-12">
@@ -188,7 +125,7 @@ const Blogs = ({ darkMode }) => {
                 }`}>
                   <span className="flex items-center gap-1">
                     <Calendar size={12} />
-                    {featuredBlog.date}
+                    {new Date(featuredBlog.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock size={12} />
@@ -254,7 +191,7 @@ const Blogs = ({ darkMode }) => {
                   }`}>
                     <span className="flex items-center gap-1">
                       <Calendar size={10} />
-                      {blog.date}
+                      {new Date(blog.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock size={10} />
@@ -290,34 +227,36 @@ const Blogs = ({ darkMode }) => {
         </div>
 
         {/* View More/Less Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 text-center"
-        >
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className={`inline-flex items-center gap-2 px-8 py-4 font-mono text-[11px] tracking-[0.2em] border transition-all duration-300 ${
-              darkMode 
-                ? 'border-white/20 text-white hover:bg-white hover:text-[#1a1410]' 
-                : 'border-[#1a1410]/20 text-[#1a1410] hover:bg-[#1a1410] hover:text-white'
-            }`}
+        {blogs.length > INITIAL_DISPLAY_COUNT && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-16 text-center"
           >
-            {showAll ? (
-              <>
-                Show Less Articles
-                <ChevronUp size={14} />
-              </>
-            ) : (
-              <>
-                View More Articles
-                <ChevronDown size={14} />
-              </>
-            )}
-          </button>
-        </motion.div>
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className={`inline-flex items-center gap-2 px-8 py-4 font-mono text-[11px] tracking-[0.2em] border transition-all duration-300 ${
+                darkMode 
+                  ? 'border-white/20 text-white hover:bg-white hover:text-[#1a1410]' 
+                  : 'border-[#1a1410]/20 text-[#1a1410] hover:bg-[#1a1410] hover:text-white'
+              }`}
+            >
+              {showAll ? (
+                <>
+                  Show Less Articles
+                  <ChevronUp size={14} />
+                </>
+              ) : (
+                <>
+                  View More Articles
+                  <ChevronDown size={14} />
+                </>
+              )}
+            </button>
+          </motion.div>
+        )}
       </div>
     </section>
   );

@@ -17,7 +17,7 @@ const Header = ({ darkMode, setDarkMode }) => {
 
         {/* Navigation Links */}
         <div className="hidden md:flex gap-8 font-mono text-[11px] tracking-[0.2em]">
-          {['HOME', 'PROJECTS', 'EXPERIENCE', 'DESIGNS', 'TIMELINE', 'BLOGS', 'CONTACT'].map((item) => (
+          {['HOME', 'PROJECTS', 'DESIGNS', 'TIMELINE', 'BLOGS', 'CONTACT'].map((item) => (
             <a
               key={item}
               href={`#${item.toLowerCase()}`}
