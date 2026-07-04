@@ -1,64 +1,7 @@
 import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
-
-const projects = [
-  {
-    title: "Prime Pair Academy",
-    category: "Gamified Learning Platform",
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona/Prime-Pair-Academy",
-    desc: "Khan-Academy-meets-Duolingo MERN platform with two original mascots (Ghefi & Lethe), XP/streaks, interactive quizzes, flashcards, scholarships and opportunities."
-  },
-  {
-    title: "Eritrea Learn Academy",
-    category: "Education / E-Learning",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona/Er-Learn-Academy",
-    desc: "Teach English, computer skills, and world languages in Tigrigna/English/Arabic. Placement tests, reading/listening/practice lessons, exams, and a live-WPM typing course."
-  },
-  {
-    title: "Lumière E-Commerce Platform",
-    category: "Full Stack E-Commerce",
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona/Lumi-re_ECommerce",
-    desc: "Complete MERN store: product catalog with search/filter/sort, cart, JWT auth, checkout, order history, reviews, and an admin dashboard."
-  },
-  {
-    title: "Pulse Analytics Dashboard",
-    category: "Analytics Platform",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona/Pulse_Analytics",
-    desc: "MERN dashboard with KPI deltas, revenue trends, breakdowns and a live activity feed — powered by MongoDB aggregation pipelines and Recharts."
-  },
-  {
-    title: "Ripple Real-Time Chat",
-    category: "Real-Time / WebSockets",
-    image: "https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona/Ripple-Chat",
-    desc: "Socket.io group chat with channels, online presence, and typing indicators. JWT-authenticated sockets and persisted message history."
-  },
-  {
-    title: "TaskFlow Kanban Board",
-    category: "Productivity / Project Management",
-    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona/TaskFlow-Kanban-Board",
-    desc: "Trello-style MERN board with drag-and-drop cards and lists, labels, multiple boards, and debounced auto-save to MongoDB."
-  },
-  {
-    title: "NESAB Vehicle Oil System",
-    category: "Full Stack Web Application",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona",
-    desc: "Leading development of responsive web tools for vehicle oil management with complex database architecture and optimized performance."
-  },
-  {
-    title: "JPII Institute Portal",
-    category: "Educational Platform",
-    image: "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=800&h=600&fit=crop",
-    link: "https://github.com/Min-joona",
-    desc: "Assisted development team integrating complex databases and optimizing site performance for the TVET institute web project."
-  }
-];
+import { ArrowUpRight, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import projects from '../data/projectData';
 
 const Projects = ({ darkMode }) => {
   return (
@@ -85,7 +28,7 @@ const Projects = ({ darkMode }) => {
           <p className={`text-sm max-w-lg font-mono ${
             darkMode ? 'text-white/60' : 'text-[#1a1410]/60'
           }`}>
-            A collection of projects demonstrating MERN Stack development, database management, and responsive web design expertise. Winner of Gold Medal in academic excellence.
+            A collection of MERN Stack applications, from gamified learning to real-time chat. Click any project for a full case study.
           </p>
         </motion.div>
 
@@ -98,9 +41,8 @@ const Projects = ({ darkMode }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group cursor-pointer"
             >
-              <a href={project.link} target="_blank" rel="noopener noreferrer">
+              <Link to={`/projects/${project.slug}`} className="group block">
                 {/* Image Container */}
                 <div className={`relative aspect-[4/3] rounded-xl overflow-hidden mb-6 ${
                   darkMode ? 'bg-[#2a2018]' : 'bg-[#e0d5cc]'
@@ -113,14 +55,30 @@ const Projects = ({ darkMode }) => {
                     className="w-full h-full object-cover"
                   />
                   
-                  {/* Hover Arrow */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 flex items-center justify-center"
-                  >
-                    <ArrowUpRight size={18} className="text-[#1a1410]" />
-                  </motion.div>
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-[#1a1410]/0 group-hover:bg-[#1a1410]/40 transition-colors duration-300 flex items-center justify-center">
+                    <span className={`px-4 py-2 rounded-full text-[10px] font-mono tracking-wider border backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                      darkMode ? 'border-white/30 text-white bg-white/10' : 'border-white/30 text-white bg-black/20'
+                    }`}>
+                      View Case Study
+                    </span>
+                  </div>
+                  
+                  {/* Demo Badge */}
+                  {project.demo && (
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className={`absolute top-3 right-3 px-3 py-1.5 rounded-full text-[9px] font-mono tracking-wider border backdrop-blur-md flex items-center gap-1.5 transition-all hover:scale-105 ${
+                        darkMode ? 'border-white/20 text-white bg-white/10' : 'border-[#1a1410]/20 text-[#1a1410] bg-white/80'
+                      }`}
+                    >
+                      <ExternalLink size={10} />
+                      Live Demo
+                    </a>
+                  )}
                 </div>
 
                 {/* Content */}
@@ -143,12 +101,28 @@ const Projects = ({ darkMode }) => {
                       }`}
                     />
                   </div>
-                  {project.desc && (
-                    <p className={`text-xs font-mono leading-relaxed ${
-                      darkMode ? 'text-white/50' : 'text-[#1a1410]/50'
+                  <p className={`text-xs font-mono leading-relaxed line-clamp-2 ${
+                    darkMode ? 'text-white/50' : 'text-[#1a1410]/50'
+                  }`}>
+                    {project.overview}
+                  </p>
+                </div>
+
+                {/* Tech Tags */}
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {project.tech.slice(0, 3).map((t, i) => (
+                    <span key={i} className={`px-2 py-0.5 rounded text-[9px] font-mono ${
+                      darkMode ? 'bg-white/5 text-white/50' : 'bg-[#1a1410]/5 text-[#1a1410]/50'
                     }`}>
-                      {project.desc}
-                    </p>
+                      {t}
+                    </span>
+                  ))}
+                  {project.tech.length > 3 && (
+                    <span className={`px-2 py-0.5 rounded text-[9px] font-mono ${
+                      darkMode ? 'bg-white/5 text-white/40' : 'bg-[#1a1410]/5 text-[#1a1410]/40'
+                    }`}>
+                      +{project.tech.length - 3}
+                    </span>
                   )}
                 </div>
 
@@ -156,7 +130,7 @@ const Projects = ({ darkMode }) => {
                 <div className={`mt-4 h-px w-full ${
                   darkMode ? 'bg-white/20' : 'bg-[#1a1410]/20'
                 }`} />
-              </a>
+              </Link>
             </motion.div>
           ))}
         </div>

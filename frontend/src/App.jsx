@@ -11,6 +11,7 @@ import Blogs from './components/Blogs';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import BlogPost from './components/BlogPost';
+import ProjectDetail from './components/ProjectDetail';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import AdminBlogs from './components/AdminBlogs';
@@ -82,6 +83,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home darkMode={darkMode} setDarkMode={setDarkMode} />} />
             <Route path="/blog/:slug" element={<BlogPost darkMode={darkMode} setDarkMode={setDarkMode} />} />
+            <Route path="/projects/:slug" element={<ProjectDetail darkMode={darkMode} />} />
             <Route path="/admin/login" element={<AdminLogin darkMode={darkMode} />} />
             <Route path="/admin" element={<AdminDashboard darkMode={darkMode} setDarkMode={setDarkMode} />} />
             <Route path="/admin/blogs" element={<AdminBlogs darkMode={darkMode} />} />
