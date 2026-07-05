@@ -5,7 +5,7 @@ const { notifyBlogLike, notifyBlogComment } = require('../utils/email');
 
 router.get('/', async (req, res) => {
   try {
-    const blogs = await Blog.find({ published: true }).sort({ date: -1 });
+    const blogs = await Blog.find({ $or: [{ published: true }, { published: { $exists: false } }] }).sort({ date: -1 });
     res.json(blogs);
   } catch (error) {
     res.status(500).json({ error: error.message });
