@@ -18,7 +18,7 @@
       }
     },
     {
-      "src": "/(sitemap.xml|robots.txt|favicon.ico|favicon.png|logo.png|apple-touch-icon.png|og-image.png)",
+      "src": "/(.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|pdf|txt|xml|json|webmanifest|css|js|map|woff|woff2|ttf|eot|mp4))",
       "dest": "/$1"
     },
     {
