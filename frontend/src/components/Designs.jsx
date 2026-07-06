@@ -131,11 +131,6 @@ const Designs = ({ darkMode }) => {
           </div>
         )}
 
-        {!loading && !error && designs.length > 0 && (
-          <p className={`mt-8 text-[10px] font-mono tracking-wider ${darkMode ? 'text-white/30' : 'text-[#1a1410]/30'}`}>
-            ⓘ Placeholder previews — swap in your Figma exports & share links anytime.
-          </p>
-        )}
       </div>
     </section>
   );
