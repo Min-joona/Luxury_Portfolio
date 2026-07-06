@@ -21,6 +21,7 @@ import AdminDesigns from './components/AdminDesigns';
 import AdminMessages from './components/AdminMessages';
 import AdminSettings from './components/AdminSettings';
 import AdminTimeline from './components/AdminTimeline';
+import AdminResume from './components/AdminResume';
 import NotFound from './components/NotFound';
 
 // Home component for the main page
@@ -98,6 +99,7 @@ function App() {
             <Route path="/admin/messages" element={<AdminMessages darkMode={darkMode} />} />
             <Route path="/admin/settings" element={<AdminSettings darkMode={darkMode} />} />
             <Route path="/admin/timeline" element={<AdminTimeline darkMode={darkMode} />} />
+            <Route path="/admin/resume" element={<AdminResume darkMode={darkMode} />} />
             <Route path="*" element={<NotFound darkMode={darkMode} />} />
           </Routes>
         </Router>

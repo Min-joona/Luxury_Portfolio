@@ -32,4 +32,26 @@ export async function api(endpoint, options = {}) {
   return data;
 }
 
+// Upload an image through our own signed backend endpoint (server-side
+// Cloudinary upload). Returns the hosted URL. Avoids needing an unsigned
+// browser preset and keeps the Cloudinary secret on the server.
+export function uploadImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.onload = async () => {
+      try {
+        const data = await api('/api/admin/upload', {
+          method: 'POST',
+          body: JSON.stringify({ image: reader.result }),
+        });
+        resolve(data.url);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 export default API_URL;

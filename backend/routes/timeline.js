@@ -51,4 +51,21 @@ router.delete('/:id', verifyToken, async (req, res) => {
   }
 });
 
+// One-time additive seed (guarded) — populates the timeline only if empty,
+// so it never overwrites entries you've added in the admin panel.
+router.post('/seed', async (req, res) => {
+  if (!process.env.SEED_TOKEN || req.headers['x-seed-token'] !== process.env.SEED_TOKEN) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  try {
+    const count = await Timeline.countDocuments();
+    if (count > 0) return res.json({ message: 'Timeline already populated', seeded: 0 });
+    const data = require('../data/timelineData');
+    await Timeline.insertMany(data);
+    res.json({ message: 'Timeline seeded', seeded: data.length });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

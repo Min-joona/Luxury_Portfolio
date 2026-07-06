@@ -3,10 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit2, Trash2, Save, X, Upload, Eye, Calendar, FileText } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
-import { api } from '../api';
-
-const CLOUD_NAME = 'dxvvpresa';
-const UPLOAD_PRESET = 'portfolio_uploads';
+import { api, uploadImage } from '../api';
 
 const ToggleSwitch = ({ checked, onChange }) => (
   <button
@@ -129,16 +126,10 @@ const AdminBlogs = ({ darkMode }) => {
 
   const uploadToCloudinary = async (file) => {
     setUploading(true);
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', UPLOAD_PRESET);
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
-      const data = await res.json();
-      setFormData(f => ({ ...f, image: data.secure_url }));
-    } catch (e) {
-      console.error('Upload failed', e);
-    }
+      const url = await uploadImage(file);
+      setFormData(f => ({ ...f, image: url }));
+    } catch (e) { console.error('Upload failed', e); alert('Image upload failed: ' + e.message); }
     setUploading(false);
   };
 

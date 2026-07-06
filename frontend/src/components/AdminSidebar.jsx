@@ -1,5 +1,5 @@
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, FileText, FolderKanban, Palette, Clock, MessageSquare, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, FolderKanban, Palette, Clock, MessageSquare, Settings, LogOut, FileUser } from 'lucide-react';
 
 const NAV = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -7,6 +7,7 @@ const NAV = [
   { to: '/admin/projects', label: 'Projects', icon: FolderKanban },
   { to: '/admin/designs', label: 'Designs', icon: Palette },
   { to: '/admin/timeline', label: 'Timeline', icon: Clock },
+  { to: '/admin/resume', label: 'Resume', icon: FileUser },
   { to: '/admin/messages', label: 'Messages', icon: MessageSquare },
   { to: '/admin/settings', label: 'Settings', icon: Settings },
 ];

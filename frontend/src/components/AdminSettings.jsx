@@ -3,10 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Save, Upload, User, Camera } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
-import { api } from '../api';
-
-const CLOUD_NAME = 'dxvvpresa';
-const UPLOAD_PRESET = 'portfolio_uploads';
+import { api, uploadImage } from '../api';
 
 const AdminSettings = ({ darkMode }) => {
   const navigate = useNavigate();
@@ -41,14 +38,10 @@ const AdminSettings = ({ darkMode }) => {
 
   const uploadToCloudinary = async (file) => {
     setUploading(true);
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', UPLOAD_PRESET);
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
-      const data = await res.json();
-      setSettings(s => ({ ...s, avatar: data.secure_url }));
-    } catch (e) { console.error('Upload failed', e); }
+      const url = await uploadImage(file);
+      setSettings(s => ({ ...s, avatar: url }));
+    } catch (e) { console.error('Upload failed', e); alert('Image upload failed: ' + e.message); }
     setUploading(false);
   };
 
