@@ -1,6 +1,10 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Rocket, Building2, Briefcase, GraduationCap, HeartPulse, Wrench, Award, MapPin, Sparkles } from 'lucide-react';
+import { api } from '../api';
+
+// Map the icon name stored in the database to a lucide component.
+const ICONS = { Rocket, Building2, Briefcase, GraduationCap, HeartPulse, Wrench, Award, MapPin, Sparkles };
 
 const milestones = [
   { 
@@ -178,9 +182,31 @@ const statusStyle = (darkMode, status) => {
 };
 
 const Timeline = ({ darkMode }) => {
-  const careerMilestones = milestones.filter(m => m.type === 'career');
-  const skillMilestones = milestones.filter(m => m.type === 'skill');
+  const [items, setItems] = useState(null);
   const skillsRef = useRef(null);
+
+  // Pull timeline from the API; fall back to the built-in data if empty/unreachable.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await api('/api/timeline');
+        if (!cancelled && Array.isArray(data) && data.length) setItems(data);
+      } catch { /* keep fallback */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const dbMilestones = items
+    ? items.filter(i => i.type === 'milestone').map(i => ({ ...i, type: i.milestoneType, icon: ICONS[i.icon] || Award }))
+    : null;
+  const dbScholarships = items ? items.filter(i => i.type === 'scholarship') : null;
+
+  const useMilestones = dbMilestones && dbMilestones.length ? dbMilestones : milestones;
+  const useScholarships = dbScholarships && dbScholarships.length ? dbScholarships : scholarships;
+
+  const careerMilestones = useMilestones.filter(m => m.type === 'career');
+  const skillMilestones = useMilestones.filter(m => m.type === 'skill');
 
   useEffect(() => {
     if (skillsRef.current) {
@@ -444,7 +470,7 @@ const Timeline = ({ darkMode }) => {
                   Scholar-<br />ships
                 </span>
               </div>
-              {scholarships.map((s, index) => {
+              {useScholarships.map((s, index) => {
                 const isTop = index % 2 === 0;
                 return (
                   <motion.div

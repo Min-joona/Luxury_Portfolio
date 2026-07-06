@@ -41,24 +41,31 @@ const authLimiter = rateLimit({
   message: { error: 'Too many attempts, please try again later.' },
 });
 
+// Cache the connection across serverless invocations so a cold start
+// awaits an in-flight connect instead of querying a not-yet-open socket.
+let cached = global._mongoose;
+if (!cached) cached = global._mongoose = { conn: null, promise: null };
+
 const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
-  } catch (err) {
-    console.error('CRITICAL: MongoDB connection error.');
-    console.error('Error Details:', err.message);
+  if (cached.conn) return cached.conn;
+  if (!cached.promise) {
+    cached.promise = mongoose
+      .connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 10000 })
+      .then((m) => { console.log('Connected to MongoDB'); return m; });
   }
+  cached.conn = await cached.promise;
+  return cached.conn;
 };
 
-connectDB();
-
-const db = mongoose.connection;
-db.on('error', (err) => {
-  if (err.message.includes('ENOTFOUND')) {
-    console.warn('Warning: Database host not found.');
-  } else {
-    console.error('Database connection error:', err);
+// Ensure the DB is connected before any /api route runs (serverless-safe).
+app.use(async (_req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    // Let the connection retry on the next request instead of caching a failure.
+    cached.promise = null;
+    res.status(503).json({ error: 'Database temporarily unavailable, please retry.' });
   }
 });
 

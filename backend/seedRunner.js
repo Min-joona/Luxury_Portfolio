@@ -1,10 +1,12 @@
 const Blog = require('./models/Blog');
 const Project = require('./models/Project');
 const Design = require('./models/Design');
+const Timeline = require('./models/Timeline');
 const Admin = require('./models/Admin');
 const { blogs } = require('./data/blogData');
 const projects = require('./data/projectData');
 const designs = require('./data/designData');
+const timeline = require('./data/timelineData');
 
 async function runSeed() {
   await Blog.deleteMany({});
@@ -15,6 +17,9 @@ async function runSeed() {
 
   await Design.deleteMany({});
   await Design.insertMany(designs);
+
+  await Timeline.deleteMany({});
+  await Timeline.insertMany(timeline);
 
   let adminCreated = false;
   if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
