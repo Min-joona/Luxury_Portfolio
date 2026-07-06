@@ -1,40 +1,50 @@
 # Amar Hassen Mohammednur — Portfolio
 
-A full-stack developer portfolio with interactive 3D visuals, a database-driven blog, a contact pipeline, and a private admin dashboard for managing content.
+A full-stack developer portfolio and lightweight CMS: an animated marketing site backed by a database, with project case-study pages, a designed resume, a blog, a contact pipeline, and a private admin dashboard that manages every piece of content without touching code.
 
 **Live site:** [amar-shesheno-luxury.vercel.app](https://amar-shesheno-luxury.vercel.app)
 
 ## Overview
 
-- **Interactive 3D hero** — Three.js scene with smooth Framer Motion transitions
-- **Selected work** — six production full-stack projects with source links
-- **Experience & designs** — professional background, scholarships, and Figma work
-- **Blog** — full articles with likes, shares, views, and comments, served from MongoDB
-- **Contact** — validated form persisting messages to the database
-- **Admin dashboard** — authenticated panel with content statistics and full CRUD over blogs and messages
-- **Dark / light theming** — persistent, system-aware toggle
+### Public site
+- **Animated hero** with a blur-up profile card (LQIP placeholder → full image) and dark / light theming
+- **Projects** — grid of work, each linking to a full **case-study page** (`/projects/:slug`) with overview, challenge, outcome, features, and tech stack
+- **Designs** — a Figma / visual gallery
+- **Timeline** — career, skills, and scholarships as horizontally scrolling tracks
+- **Resume** — a designed résumé page (`/resume`) that mirrors the site's styling, with animated language-proficiency bars plus **Download PDF** and **Print**
+- **Blog** — full articles with likes, shares, views, and comments
+- **Contact** — validated form that stores messages and emails the owner on submission
+
+### Admin dashboard (`/admin`)
+A private, JWT-protected control panel with analytics (Recharts) and full CRUD over **blogs, projects, designs, timeline, messages, and settings** — including **image uploads** (Cloudinary) and content **publish toggles**. Content edited here updates the public site immediately, since the frontend reads projects, designs, blogs, and the timeline from the API.
 
 ## Architecture
 
 ```
 Luxury-Portfolio/
-├── backend/          Express REST API
-│   ├── controllers/  Authentication
-│   ├── models/       Admin, Blog, Message
-│   └── routes/       /api/blogs · /api/messages · /api/admin
-└── frontend/         React app (Create React App)
-    └── src/
-        └── components/   Sections, blog reader, admin panel
+├── backend/               Express REST API
+│   ├── controllers/       Authentication
+│   ├── models/            Admin, Blog, Project, Design, Timeline, Message, Setting, PageView
+│   ├── routes/            /api/blogs · /api/projects · /api/designs
+│   │                      /api/timeline · /api/messages · /api/admin
+│   ├── data/              Seed data
+│   └── seedRunner.js      Idempotent content seeding
+└── frontend/              React app (Create React App)
+    └── src/components/     Sections, case-study & blog readers, resume, admin suite
 ```
+
+The API caches its MongoDB connection and awaits it per request, so it runs reliably on serverless cold starts. Public content endpoints fall back gracefully, and the frontend degrades to built-in data if the API is unreachable.
 
 ## Tech Stack
 
-| Layer      | Technology                                             |
-| ---------- | ------------------------------------------------------ |
-| Frontend   | React 19, Three.js, Framer Motion, Tailwind CSS        |
-| Backend    | Node.js, Express, Mongoose                             |
-| Database   | MongoDB Atlas                                          |
-| Security   | Helmet, rate limiting, input sanitization, JWT         |
+| Layer      | Technology                                                        |
+| ---------- | ----------------------------------------------------------------- |
+| Frontend   | React 19, Three.js, Framer Motion, Tailwind CSS, Recharts         |
+| Backend    | Node.js, Express, Mongoose                                        |
+| Database   | MongoDB Atlas                                                     |
+| Media      | Cloudinary                                                       |
+| Email      | Nodemailer                                                       |
+| Security   | Helmet, rate limiting, input sanitization, JWT                    |
 
 ## Getting Started
 
@@ -55,13 +65,17 @@ npm start
 
 ### Environment
 
-The API expects the following variables in `backend/.env`:
+The API reads the following from `backend/.env`:
 
-| Variable          | Purpose                                   |
-| ----------------- | ----------------------------------------- |
-| `MONGODB_URI`     | MongoDB connection string                 |
-| `JWT_SECRET`      | Secret for signing admin session tokens   |
-| `ALLOWED_ORIGINS` | Comma-separated CORS origin allow-list    |
+| Variable                        | Purpose                                       |
+| ------------------------------- | --------------------------------------------- |
+| `MONGODB_URI`                   | MongoDB connection string                     |
+| `JWT_SECRET`                    | Secret for signing admin session tokens       |
+| `ALLOWED_ORIGINS`               | Comma-separated CORS origin allow-list        |
+| `CLOUDINARY_*`                  | Credentials for image uploads                 |
+| `EMAIL_*`                       | SMTP credentials for contact notifications    |
+
+The frontend reads `REACT_APP_API_URL` (the deployed API base URL).
 
 ## Author
 
