@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import FlipCard from './FlipCard';
+import { Link } from 'react-router-dom';
+import ProfileCard from './ProfileCard';
 
 const Hero = ({ darkMode }) => {
   return (
@@ -33,21 +34,21 @@ const Hero = ({ darkMode }) => {
             </p>
 
             <div className="flex flex-wrap gap-4 pt-4">
-              <a
-                href="#projects"
+              <Link
+                to="/resume"
                 className={`group px-8 py-4 font-mono text-[11px] tracking-[0.2em] border transition-all duration-300 ${
-                  darkMode 
-                    ? 'border-white/20 text-white hover:bg-white hover:text-[#1a1410]' 
+                  darkMode
+                    ? 'border-white/20 text-white hover:bg-white hover:text-[#1a1410]'
                     : 'border-[#1a1410]/20 text-[#1a1410] hover:bg-[#1a1410] hover:text-white'
                 }`}
               >
-                VIEW PROJECTS
-              </a>
+                VIEW RESUME
+              </Link>
               <a
                 href="#contact"
                 className={`group px-8 py-4 font-mono text-[11px] tracking-[0.2em] underline underline-offset-4 transition-all duration-300 ${
-                  darkMode 
-                    ? 'text-white hover:text-white/70' 
+                  darkMode
+                    ? 'text-white hover:text-white/70'
                     : 'text-[#1a1410] hover:text-[#1a1410]/70'
                 }`}
               >
@@ -56,14 +57,14 @@ const Hero = ({ darkMode }) => {
             </div>
           </motion.div>
 
-          {/* Right Column: 3D Chocolate Molecule Flip Card */}
+          {/* Right Column: Profile card with blur-up image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
             className="relative"
           >
-            <FlipCard darkMode={darkMode} />
+            <ProfileCard darkMode={darkMode} />
           </motion.div>
 
         </div>

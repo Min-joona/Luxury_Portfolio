@@ -39,3 +39,9 @@ html {
 ::selection {
   background-color: rgba(212, 175, 55, 0.3);
 }
+
+/* Print: show only the resume content, hide nav/buttons */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; }
+}
