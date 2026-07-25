@@ -5,6 +5,7 @@ const designSchema = new mongoose.Schema({
   category: { type: String, required: true },
   images: [{ type: String }],
   image: { type: String },
+  videos: [{ type: String }],
   link: String,
   published: { type: Boolean, default: true }
 }, { timestamps: true });

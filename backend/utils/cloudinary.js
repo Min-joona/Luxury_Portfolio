@@ -16,8 +16,17 @@ async function uploadImage(base64Image) {
   return { url: result.secure_url, publicId: result.public_id };
 }
 
+async function uploadVideo(base64Video) {
+  const result = await cloudinary.uploader.upload(base64Video, {
+    resource_type: 'video',
+    folder: 'portfolio',
+    chunk_size: 6000000,
+  });
+  return { url: result.secure_url, publicId: result.public_id };
+}
+
 async function deleteImage(publicId) {
   return cloudinary.uploader.destroy(publicId);
 }
 
-module.exports = { cloudinary, uploadImage, deleteImage };
+module.exports = { cloudinary, uploadImage, uploadVideo, deleteImage };

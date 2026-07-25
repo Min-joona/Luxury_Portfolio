@@ -54,4 +54,23 @@ export function uploadImage(file) {
   });
 }
 
+export function uploadVideo(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.onload = async () => {
+      try {
+        const data = await api('/api/admin/upload-video', {
+          method: 'POST',
+          body: JSON.stringify({ video: reader.result }),
+        });
+        resolve(data.url);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 export default API_URL;

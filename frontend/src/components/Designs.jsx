@@ -1,10 +1,41 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Figma, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '../api';
 
+const MediaItem = ({ item, isActive }) => {
+  if (item.type === 'video') {
+    return (
+      <video
+        src={item.url}
+        muted
+        loop
+        playsInline
+        autoPlay={isActive}
+        className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+        style={{ opacity: isActive ? 1 : 0 }}
+      />
+    );
+  }
+  return (
+    <img
+      src={item.url}
+      alt=""
+      loading="lazy"
+      className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+      style={{ opacity: isActive ? 1 : 0, transform: isActive ? 'translateX(0)' : 'translateX(-30px)' }}
+    />
+  );
+};
+
 const DesignCard = ({ design, darkMode }) => {
-  const images = design.images?.length ? design.images : (design.image ? [design.image] : []);
+  const media = useMemo(() => {
+    const items = [];
+    if (design.videos?.length) design.videos.forEach(v => items.push({ url: v, type: 'video' }));
+    const imgs = design.images?.length ? design.images : (design.image ? [design.image] : []);
+    imgs.forEach(i => items.push({ url: i, type: 'image' }));
+    return items;
+  }, [design]);
   const intervalRef = useRef(null);
   const [active, setActive] = useState(false);
   const [index, setIndex] = useState(0);
@@ -17,15 +48,15 @@ const DesignCard = ({ design, darkMode }) => {
 
   const toggle = useCallback(() => {
     if (active) { stop(); return; }
-    if (images.length <= 1) {
+    if (media.length <= 1) {
       if (design.link) window.open(design.link, '_blank');
       return;
     }
     setActive(true);
     intervalRef.current = setInterval(() => {
-      setIndex(i => (i + 1) % images.length);
+      setIndex(i => (i + 1) % media.length);
     }, 1800);
-  }, [active, images.length, design.link, stop]);
+  }, [active, media.length, design.link, stop]);
 
   useEffect(() => {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
@@ -38,26 +69,19 @@ const DesignCard = ({ design, darkMode }) => {
           darkMode ? 'bg-[#2a2018]' : 'bg-[#e0d5cc]'
         }`}>
           <div className="w-full h-full relative">
-            {images.map((img, i) => (
-              <img
-                key={i}
-                src={img}
-                alt={design.title}
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
-                style={{ opacity: i === index ? 1 : 0, transform: i === index ? 'translateX(0)' : 'translateX(-30px)' }}
-              />
+            {media.map((item, i) => (
+              <MediaItem key={i} item={item} isActive={i === index} />
             ))}
           </div>
           <div className="absolute inset-0 bg-[#1a1410]/0 hover:bg-[#1a1410]/20 transition-colors duration-300" />
-          {images.length > 1 && (
+          {media.length > 1 && (
             <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-[9px] font-mono transition-opacity duration-300 ${
               darkMode ? 'bg-black/50 text-white/80' : 'bg-white/80 text-[#1a1410]/80'
             }`}>
-              {index + 1}/{images.length}
+              {index + 1}/{media.length}
             </div>
           )}
-          {images.length <= 1 && design.link && (
+          {media.length <= 1 && design.link && (
             <div className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <ArrowUpRight size={16} className="text-[#1a1410]" />
             </div>

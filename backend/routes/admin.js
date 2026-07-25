@@ -7,7 +7,7 @@ const Design = require('../models/Design');
 const Setting = require('../models/Setting');
 const PageView = require('../models/PageView');
 const { verifyToken } = require('../controllers/authController');
-const { uploadImage, deleteImage } = require('../utils/cloudinary');
+const { uploadImage, uploadVideo, deleteImage } = require('../utils/cloudinary');
 
 // ─── Upload Image ───────────────────────────────────────────────────
 router.post('/upload', verifyToken, async (req, res) => {
@@ -15,6 +15,18 @@ router.post('/upload', verifyToken, async (req, res) => {
     const { image } = req.body;
     if (!image) return res.status(400).json({ error: 'No image data' });
     const result = await uploadImage(image);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ─── Upload Video ───────────────────────────────────────────────────
+router.post('/upload-video', verifyToken, async (req, res) => {
+  try {
+    const { video } = req.body;
+    if (!video) return res.status(400).json({ error: 'No video data' });
+    const result = await uploadVideo(video);
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });

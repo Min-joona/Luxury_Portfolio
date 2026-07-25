@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit2, Trash2, Save, X, Upload, Palette, Image as ImageIcon } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
-import { api, uploadImage } from '../api';
+import { api, uploadImage, uploadVideo } from '../api';
 
 const ToggleSwitch = ({ checked, onChange }) => (
   <button type="button" onClick={() => onChange(!checked)}
@@ -15,12 +15,14 @@ const ToggleSwitch = ({ checked, onChange }) => (
 const AdminDesigns = ({ darkMode }) => {
   const navigate = useNavigate();
   const fileRef = useRef();
+  const videoRef = useRef();
   const [designs, setDesigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [form, setForm] = useState({ title: '', category: '', images: [], link: '', published: true });
+  const [videoUploading, setVideoUploading] = useState(false);
+  const [form, setForm] = useState({ title: '', category: '', images: [], videos: [], link: '', published: true });
 
   useEffect(() => {
     if (!localStorage.getItem('adminToken')) { navigate('/admin/login'); return; }
@@ -39,6 +41,19 @@ const AdminDesigns = ({ darkMode }) => {
       setForm(f => ({ ...f, images: [...f.images, url] }));
     } catch (e) { console.error('Upload failed', e); alert('Image upload failed: ' + e.message); }
     setUploading(false);
+  };
+
+  const uploadToCloudinaryVideo = async (file) => {
+    setVideoUploading(true);
+    try {
+      const url = await uploadVideo(file);
+      setForm(f => ({ ...f, videos: [...f.videos, url] }));
+    } catch (e) { console.error('Upload failed', e); alert('Video upload failed: ' + e.message); }
+    setVideoUploading(false);
+  };
+
+  const removeVideo = (index) => {
+    setForm(f => ({ ...f, videos: f.videos.filter((_, i) => i !== index) }));
   };
 
   const removeImage = (index) => {
@@ -60,13 +75,13 @@ const AdminDesigns = ({ darkMode }) => {
     try { await api(`/api/admin/designs/${id}`, { method: 'DELETE' }); fetchDesigns(); } catch (e) { console.error(e); }
   };
 
-  const openNewForm = () => { setForm({ title: '', category: '', images: [], link: '', published: true }); setEditing(null); setShowForm(true); };
+  const openNewForm = () => { setForm({ title: '', category: '', images: [], videos: [], link: '', published: true }); setEditing(null); setShowForm(true); };
   const startEdit = (d) => {
     setEditing(d);
-    setForm({ ...d, images: d.images && d.images.length ? d.images : (d.image ? [d.image] : []) });
+    setForm({ ...d, images: d.images && d.images.length ? d.images : (d.image ? [d.image] : []), videos: d.videos || [] });
     setShowForm(true);
   };
-  const resetForm = () => { setShowForm(false); setEditing(null); setForm({ title: '', category: '', images: [], link: '', published: true }); };
+  const resetForm = () => { setShowForm(false); setEditing(null); setForm({ title: '', category: '', images: [], videos: [], link: '', published: true }); };
 
   if (loading) return (
     <div className="min-h-screen bg-[#0d0705] flex items-center justify-center">
@@ -122,6 +137,31 @@ const AdminDesigns = ({ darkMode }) => {
                     <input type="file" ref={fileRef} accept="image/*" className="hidden" onChange={e => e.target.files[0] && uploadToCloudinary(e.target.files[0])} />
                   </div>
 
+                  <div>
+                    <label className="block text-white/50 font-mono text-xs uppercase tracking-wider mb-2">Videos</label>
+                    <div className="flex flex-wrap gap-3 mb-3">
+                      {form.videos.map((url, i) => (
+                        <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 group bg-black/40">
+                          <video src={url} className="w-full h-full object-cover" muted />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                              <div className="w-0 h-0 border-y-4 border-y-transparent border-l-8 border-l-white ml-0.5" />
+                            </div>
+                          </div>
+                          <button type="button" onClick={() => removeVideo(i)}
+                            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <X size={12} />
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button" onClick={() => videoRef.current.click()} disabled={videoUploading}
+                        className="w-24 h-24 rounded-lg border-2 border-dashed border-white/10 flex items-center justify-center hover:border-white/30 transition-all text-white/30 hover:text-white/60">
+                        {videoUploading ? <div className="w-5 h-5 rounded-full border-2 border-[#D4AF37] border-t-transparent animate-spin" /> : <Upload size={20} />}
+                      </button>
+                    </div>
+                    <input type="file" ref={videoRef} accept="video/*" className="hidden" onChange={e => e.target.files[0] && uploadToCloudinaryVideo(e.target.files[0])} />
+                  </div>
+
                   <input placeholder="Figma Link (optional)" value={form.link} onChange={e => setForm({...form, link: e.target.value})}
                     className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#D4AF37]/50 focus:outline-none transition-colors" />
                   <div className="flex items-center gap-3 pt-2">
@@ -148,10 +188,26 @@ const AdminDesigns = ({ darkMode }) => {
               <motion.div key={d._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 className="p-4 rounded-xl bg-[#1a1410] border border-white/5 hover:border-white/10 transition-all group">
                 <div className="relative">
-                  <img src={d.images?.[0] || d.image} alt={d.title} className="w-full aspect-[4/3] rounded-lg object-cover mb-3" />
-                  {(d.images?.length || (d.image ? 1 : 0)) > 1 && (
+                  {d.videos?.length > 0 ? (
+                    <div className="w-full aspect-[4/3] rounded-lg object-cover mb-3 bg-black/60 flex items-center justify-center relative">
+                      <video src={d.videos[0]} className="absolute inset-0 w-full h-full object-cover rounded-lg" muted />
+                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded-lg">
+                        <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                          <div className="w-0 h-0 border-y-6 border-y-transparent border-l-[12px] border-l-white ml-1" />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <img src={d.images?.[0] || d.image} alt={d.title} className="w-full aspect-[4/3] rounded-lg object-cover mb-3" />
+                  )}
+                  {(d.images?.length || (d.image ? 1 : 0)) > 1 && !d.videos?.length && (
                     <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 text-white/80 text-[9px] font-mono">
                       {(d.images?.length || (d.image ? 1 : 0))} images
+                    </span>
+                  )}
+                  {d.videos?.length > 0 && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 text-white/80 text-[9px] font-mono">
+                      {d.videos.length} video{d.videos.length > 1 ? 's' : ''}
                     </span>
                   )}
                 </div>
