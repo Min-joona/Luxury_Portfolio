@@ -55,6 +55,7 @@ const AdminDesigns = ({ darkMode }) => {
     try { await api(`/api/admin/designs/${id}`, { method: 'DELETE' }); fetchDesigns(); } catch (e) { console.error(e); }
   };
 
+  const openNewForm = () => { setForm({ title: '', category: '', image: '', link: '', published: true }); setEditing(null); setShowForm(true); };
   const startEdit = (d) => { setEditing(d); setForm(d); setShowForm(true); };
   const resetForm = () => { setShowForm(false); setEditing(null); setForm({ title: '', category: '', image: '', link: '', published: true }); };
 
@@ -74,7 +75,7 @@ const AdminDesigns = ({ darkMode }) => {
               <h2 className="font-serif text-3xl text-white">Designs</h2>
               <p className="font-mono text-xs mt-1 text-white/40">{designs.length} designs</p>
             </div>
-            <button onClick={resetForm}
+            <button onClick={openNewForm}
               className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#D4AF37] text-[#0d0705] font-mono text-sm hover:bg-[#D4AF37]/90 transition-all">
               <Plus size={18} /> New Design
             </button>
