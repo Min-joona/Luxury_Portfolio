@@ -59,6 +59,11 @@ const AdminProjects = ({ darkMode }) => {
     try { await api(`/api/admin/projects/${id}`, { method: 'DELETE' }); fetchProjects(); } catch (e) { console.error(e); }
   };
 
+  const openNewForm = () => {
+    setForm({ slug: '', title: '', category: '', image: '', demo: '', github: '', overview: '', challenge: '', outcome: '', tech: '', features: '', client: '', duration: '', published: true });
+    setEditing(null); setShowForm(true);
+  };
+
   const startEdit = (p) => {
     setEditing(p);
     setForm({ ...p, tech: p.tech?.join(', ') || '', features: p.features?.join('\n') || '' });
@@ -86,7 +91,7 @@ const AdminProjects = ({ darkMode }) => {
               <h2 className="font-serif text-3xl text-white">Projects</h2>
               <p className="font-mono text-xs mt-1 text-white/40">{projects.length} projects</p>
             </div>
-            <button onClick={resetForm}
+            <button onClick={openNewForm}
               className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#D4AF37] text-[#0d0705] font-mono text-sm hover:bg-[#D4AF37]/90 transition-all">
               <Plus size={18} /> New Project
             </button>
