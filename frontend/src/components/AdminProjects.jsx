@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Trash2, Save, X, Upload, Eye, FolderKanban } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, X, Upload, Eye, FolderKanban, Star } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
 import { api, uploadImage, uploadVideo } from '../api';
 
@@ -22,10 +22,24 @@ const AdminProjects = ({ darkMode }) => {
   const [editing, setEditing] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [videoUploading, setVideoUploading] = useState(false);
+  const [dragIdx, setDragIdx] = useState(null);
+  const [dropOverIdx, setDropOverIdx] = useState(null);
+  const [dragType, setDragType] = useState(null);
   const [form, setForm] = useState({
-    slug: '', title: '', category: '', images: [], videos: [], demo: '', github: '',
+    slug: '', title: '', category: '', images: [], videos: [], cover: '', demo: '', github: '',
     overview: '', challenge: '', outcome: '', tech: '', features: '', client: '', duration: '', published: true
   });
+
+  const reorder = (list, from, to) => {
+    const copy = [...list];
+    const [moved] = copy.splice(from, 1);
+    copy.splice(to, 0, moved);
+    return copy;
+  };
+
+  const setCover = (url) => {
+    setForm(f => ({ ...f, cover: url }));
+  };
 
   useEffect(() => {
     if (!localStorage.getItem('adminToken')) { navigate('/admin/login'); return; }
@@ -60,11 +74,17 @@ const AdminProjects = ({ darkMode }) => {
   };
 
   const removeImage = (index) => {
-    setForm(f => ({ ...f, images: f.images.filter((_, i) => i !== index) }));
+    setForm(f => {
+      const removed = f.images[index];
+      return { ...f, images: f.images.filter((_, i) => i !== index), cover: f.cover === removed ? '' : f.cover };
+    });
   };
 
   const removeVideo = (index) => {
-    setForm(f => ({ ...f, videos: f.videos.filter((_, i) => i !== index) }));
+    setForm(f => {
+      const removed = f.videos[index];
+      return { ...f, videos: f.videos.filter((_, i) => i !== index), cover: f.cover === removed ? '' : f.cover };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -88,7 +108,7 @@ const AdminProjects = ({ darkMode }) => {
   };
 
   const openNewForm = () => {
-    setForm({ slug: '', title: '', category: '', images: [], videos: [], demo: '', github: '', overview: '', challenge: '', outcome: '', tech: '', features: '', client: '', duration: '', published: true });
+    setForm({ slug: '', title: '', category: '', images: [], videos: [], cover: '', demo: '', github: '', overview: '', challenge: '', outcome: '', tech: '', features: '', client: '', duration: '', published: true });
     setEditing(null); setShowForm(true);
   };
 
@@ -98,6 +118,7 @@ const AdminProjects = ({ darkMode }) => {
       ...p,
       images: p.images && p.images.length ? p.images : (p.image ? [p.image] : []),
       videos: p.videos || [],
+      cover: p.cover || '',
       tech: p.tech?.join(', ') || '',
       features: p.features?.join('\n') || ''
     });
@@ -106,7 +127,7 @@ const AdminProjects = ({ darkMode }) => {
 
   const resetForm = () => {
     setShowForm(false); setEditing(null);
-    setForm({ slug: '', title: '', category: '', images: [], videos: [], demo: '', github: '', overview: '', challenge: '', outcome: '', tech: '', features: '', client: '', duration: '', published: true });
+    setForm({ slug: '', title: '', category: '', images: [], videos: [], cover: '', demo: '', github: '', overview: '', challenge: '', outcome: '', tech: '', features: '', client: '', duration: '', published: true });
   };
 
   if (loading) return (
@@ -151,16 +172,29 @@ const AdminProjects = ({ darkMode }) => {
                   </div>
 
                   <div>
-                    <label className="block text-white/50 font-mono text-xs uppercase tracking-wider mb-2">Images</label>
+                    <label className="block text-white/50 font-mono text-xs uppercase tracking-wider mb-2">Images <span className="text-white/20">(drag to reorder)</span></label>
                     <div className="flex flex-wrap gap-3 mb-3">
                       {form.images.map((url, i) => (
-                        <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 group">
+                        <div key={i} draggable
+                          onDragStart={() => { setDragIdx(i); setDragType('image'); }}
+                          onDragOver={(e) => { e.preventDefault(); setDropOverIdx(i); }}
+                          onDragLeave={() => setDropOverIdx(null)}
+                          onDragEnd={() => { setDragIdx(null); setDropOverIdx(null); }}
+                          onDrop={() => { if (dragType === 'image' && dragIdx !== null) { setForm(f => ({ ...f, images: reorder(f.images, dragIdx, i) })); } setDragIdx(null); setDropOverIdx(null); }}
+                          className={`relative w-24 h-24 rounded-lg overflow-hidden border transition-all group cursor-grab active:cursor-grabbing ${form.cover === url ? 'border-[#D4AF37] ring-1 ring-[#D4AF37]' : 'border-white/10'} ${dropOverIdx === i && dragIdx !== i ? 'border-[#D4AF37] scale-105' : ''}`}>
                           <img src={url} alt="" className="w-full h-full object-cover" />
                           <button type="button" onClick={() => removeImage(i)}
-                            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
                             <X size={12} />
                           </button>
-                          {i === 0 && <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-[#D4AF37] text-[8px] font-mono text-[#0d0705]">Cover</span>}
+                          {form.cover === url ? (
+                            <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-[#D4AF37] text-[8px] font-mono text-[#0d0705]">Cover</span>
+                          ) : (
+                            <button type="button" onClick={(e) => { e.stopPropagation(); setCover(url); }}
+                              className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-white/10 text-white/50 hover:bg-white/20 hover:text-white text-[8px] font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Star size={10} />
+                            </button>
+                          )}
                         </div>
                       ))}
                       <button type="button" onClick={() => fileRef.current.click()} disabled={uploading}
@@ -172,20 +206,34 @@ const AdminProjects = ({ darkMode }) => {
                   </div>
 
                   <div>
-                    <label className="block text-white/50 font-mono text-xs uppercase tracking-wider mb-2">Videos</label>
+                    <label className="block text-white/50 font-mono text-xs uppercase tracking-wider mb-2">Videos <span className="text-white/20">(drag to reorder)</span></label>
                     <div className="flex flex-wrap gap-3 mb-3">
                       {form.videos.map((url, i) => (
-                        <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 group bg-black/40">
+                        <div key={i} draggable
+                          onDragStart={() => { setDragIdx(i); setDragType('video'); }}
+                          onDragOver={(e) => { e.preventDefault(); setDropOverIdx(i); }}
+                          onDragLeave={() => setDropOverIdx(null)}
+                          onDragEnd={() => { setDragIdx(null); setDropOverIdx(null); }}
+                          onDrop={() => { if (dragType === 'video' && dragIdx !== null) { setForm(f => ({ ...f, videos: reorder(f.videos, dragIdx, i) })); } setDragIdx(null); setDropOverIdx(null); }}
+                          className={`relative w-24 h-24 rounded-lg overflow-hidden border transition-all group cursor-grab active:cursor-grabbing bg-black/40 ${form.cover === url ? 'border-[#D4AF37] ring-1 ring-[#D4AF37]' : 'border-white/10'} ${dropOverIdx === i && dragIdx !== i ? 'border-[#D4AF37] scale-105' : ''}`}>
                           <video src={url} className="w-full h-full object-cover" muted />
-                          <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                               <div className="w-0 h-0 border-y-4 border-y-transparent border-l-8 border-l-white ml-0.5" />
                             </div>
                           </div>
                           <button type="button" onClick={() => removeVideo(i)}
-                            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
                             <X size={12} />
                           </button>
+                          {form.cover === url ? (
+                            <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-[#D4AF37] text-[8px] font-mono text-[#0d0705]">Cover</span>
+                          ) : (
+                            <button type="button" onClick={(e) => { e.stopPropagation(); setCover(url); }}
+                              className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-white/10 text-white/50 hover:bg-white/20 hover:text-white text-[8px] font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Star size={10} />
+                            </button>
+                          )}
                         </div>
                       ))}
                       <button type="button" onClick={() => videoRef.current.click()} disabled={videoUploading}
@@ -240,9 +288,12 @@ const AdminProjects = ({ darkMode }) => {
               <motion.div key={p._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 className="p-5 rounded-xl bg-[#1a1410] border border-white/5 flex items-center gap-4 hover:border-white/10 transition-all group">
                 <div className="w-16 h-12 rounded-lg overflow-hidden flex-shrink-0 relative bg-black/40">
-                  {p.videos?.length > 0 ? (
+                  {(() => {
+                    const cUrl = p.cover || p.videos?.[0] || p.images?.[0] || p.image;
+                    const isVid = p.cover ? p.videos?.includes(p.cover) : !!p.videos?.length;
+                    return isVid ? (
                     <>
-                      <video src={p.videos[0]} className="w-full h-full object-cover" muted />
+                      <video src={cUrl} className="w-full h-full object-cover" muted />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center">
                           <div className="w-0 h-0 border-y-2 border-y-transparent border-l-4 border-l-white ml-0.5" />
@@ -250,8 +301,8 @@ const AdminProjects = ({ darkMode }) => {
                       </div>
                     </>
                   ) : (
-                    <img src={p.images?.[0] || p.image} alt={p.title} className="w-full h-full object-cover" />
-                  )}
+                    <img src={cUrl} alt={p.title} className="w-full h-full object-cover" />
+                  ); })()}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3">

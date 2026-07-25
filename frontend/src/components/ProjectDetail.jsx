@@ -56,7 +56,7 @@ const ProjectDetail = ({ darkMode }) => {
             className="mb-12"
           >
             <div className="relative aspect-[21/9] rounded-2xl overflow-hidden mb-8">
-              <img src={project.images?.[0] || project.image} alt={project.title} className="w-full h-full object-cover" />
+              <img src={project.cover || project.images?.[0] || project.image} alt={project.title} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0d0705]/80 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6">
                 <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-mono tracking-wider mb-3 ${darkMode ? 'bg-white/10 text-white' : 'bg-[#1a1410]/10 text-[#1a1410]'}`}>

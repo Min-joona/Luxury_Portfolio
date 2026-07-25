@@ -7,6 +7,7 @@ const projectSchema = new mongoose.Schema({
   image: { type: String, required: true },
   images: [{ type: String }],
   videos: [{ type: String }],
+  cover: { type: String },
   demo: String,
   github: String,
   overview: String,

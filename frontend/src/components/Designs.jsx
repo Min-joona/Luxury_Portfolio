@@ -5,17 +5,16 @@ import { Figma, ArrowUpRight } from 'lucide-react';
 import { api } from '../api';
 
 const DesignCard = ({ design, darkMode }) => {
-  const coverMedia = design.videos?.length
-    ? { url: design.videos[0], type: 'video' }
-    : { url: design.images?.[0] || design.image, type: 'image' };
+  const coverUrl = design.cover || design.videos?.[0] || design.images?.[0] || design.image;
+  const isVideo = design.cover ? design.videos?.includes(design.cover) : !!design.videos?.length;
 
   return (
     <Link to={`/designs/${design._id}`} className="group block">
       <div className={`relative aspect-[4/3] rounded-xl overflow-hidden mb-4 ${darkMode ? 'bg-[#2a2018]' : 'bg-[#e0d5cc]'}`}>
-        {coverMedia.type === 'video' ? (
-          <video src={coverMedia.url} muted loop playsInline className="w-full h-full object-cover" />
+        {isVideo ? (
+          <video src={coverUrl} muted loop playsInline className="w-full h-full object-cover" />
         ) : (
-          <img src={coverMedia.url} alt={design.title} loading="lazy" className="w-full h-full object-cover" />
+          <img src={coverUrl} alt={design.title} loading="lazy" className="w-full h-full object-cover" />
         )}
         <div className="absolute inset-0 bg-[#1a1410]/0 hover:bg-[#1a1410]/20 transition-colors duration-300" />
         {(design.videos?.length || design.images?.length || (design.image ? 1 : 0)) > 1 && (
@@ -25,7 +24,7 @@ const DesignCard = ({ design, darkMode }) => {
             +{(design.videos?.length || 0) + (design.images?.length || (design.image ? 1 : 0)) - 1}
           </div>
         )}
-        {!coverMedia.url && (
+        {!coverUrl && (
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <ArrowUpRight size={24} className="text-white/60" />
           </div>
