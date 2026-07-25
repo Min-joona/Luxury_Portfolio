@@ -37,21 +37,25 @@ const AdminProjects = ({ darkMode }) => {
     setLoading(false);
   };
 
-  const uploadToCloudinary = async (file) => {
+  const handleFiles = async (files) => {
     setUploading(true);
-    try {
-      const url = await uploadImage(file);
-      setForm(f => ({ ...f, images: [...f.images, url] }));
-    } catch (e) { console.error('Upload failed', e); alert('Image upload failed: ' + e.message); }
+    for (const file of files) {
+      try {
+        const url = await uploadImage(file);
+        setForm(f => ({ ...f, images: [...f.images, url] }));
+      } catch (e) { console.error('Upload failed', e); alert('Image upload failed: ' + file.name); }
+    }
     setUploading(false);
   };
 
-  const uploadToCloudinaryVideo = async (file) => {
+  const handleVideoFiles = async (files) => {
     setVideoUploading(true);
-    try {
-      const url = await uploadVideo(file);
-      setForm(f => ({ ...f, videos: [...f.videos, url] }));
-    } catch (e) { console.error('Upload failed', e); alert('Video upload failed: ' + e.message); }
+    for (const file of files) {
+      try {
+        const url = await uploadVideo(file);
+        setForm(f => ({ ...f, videos: [...f.videos, url] }));
+      } catch (e) { console.error('Upload failed', e); alert('Video upload failed: ' + file.name); }
+    }
     setVideoUploading(false);
   };
 
@@ -164,7 +168,7 @@ const AdminProjects = ({ darkMode }) => {
                         {uploading ? <div className="w-5 h-5 rounded-full border-2 border-[#D4AF37] border-t-transparent animate-spin" /> : <Upload size={20} />}
                       </button>
                     </div>
-                    <input type="file" ref={fileRef} accept="image/*" className="hidden" onChange={e => e.target.files[0] && uploadToCloudinary(e.target.files[0])} />
+                    <input type="file" ref={fileRef} accept="image/*" multiple className="hidden" onChange={e => e.target.files.length && handleFiles(e.target.files)} />
                   </div>
 
                   <div>
@@ -189,7 +193,7 @@ const AdminProjects = ({ darkMode }) => {
                         {videoUploading ? <div className="w-5 h-5 rounded-full border-2 border-[#D4AF37] border-t-transparent animate-spin" /> : <Upload size={20} />}
                       </button>
                     </div>
-                    <input type="file" ref={videoRef} accept="video/*" className="hidden" onChange={e => e.target.files[0] && uploadToCloudinaryVideo(e.target.files[0])} />
+                    <input type="file" ref={videoRef} accept="video/*" multiple className="hidden" onChange={e => e.target.files.length && handleVideoFiles(e.target.files)} />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
