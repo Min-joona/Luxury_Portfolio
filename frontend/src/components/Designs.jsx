@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Figma } from 'lucide-react';
 import { api } from '../api';
-import DesignTunnel from './DesignTunnel';
+import DesignWheel from './DesignWheel';
 
 const Designs = ({ darkMode }) => {
   const [designs, setDesigns] = useState([]);
@@ -45,7 +45,7 @@ const Designs = ({ darkMode }) => {
               Designs
             </h2>
             <p className={`text-sm max-w-lg font-mono ${darkMode ? 'text-white/60' : 'text-[#1a1410]/60'}`}>
-              Interface and brand explorations crafted in Figma — drag to explore the tunnel.
+              Interface and brand explorations crafted in Figma — drag to spin the wheel.
             </p>
           </div>
           <a
@@ -86,7 +86,7 @@ const Designs = ({ darkMode }) => {
 
         {/* Designs 3D Tunnel */}
         {!loading && !error && designs.length > 0 && (
-          <DesignTunnel designs={designs} darkMode={darkMode} />
+          <DesignWheel designs={designs} darkMode={darkMode} />
         )}
 
       </div>
