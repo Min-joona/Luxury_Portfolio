@@ -131,9 +131,9 @@ const DesignDetail = ({ darkMode }) => {
               className="absolute inset-0"
             >
               {media[cur]?.type === 'video' ? (
-                <video src={media[cur].url} muted autoPlay loop playsInline className="w-full h-full object-contain" />
+                <video src={media[cur].url} muted autoPlay loop playsInline className="w-full h-full object-cover" />
               ) : (
-                <img src={media[cur]?.url} alt="" className="w-full h-full object-contain" />
+                <img src={media[cur]?.url} alt="" className="w-full h-full object-cover" />
               )}
             </motion.div>
           </AnimatePresence>

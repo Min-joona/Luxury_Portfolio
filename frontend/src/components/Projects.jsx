@@ -182,13 +182,24 @@ const Projects = ({ darkMode }) => {
                 <div className={`relative aspect-[4/3] rounded-xl overflow-hidden mb-6 ${
                   darkMode ? 'bg-[#2a2018]' : 'bg-[#e0d5cc]'
                 }`}>
-                  <motion.img
-                    src={project.image}
-                    alt={project.title}
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
-                    className="w-full h-full object-cover"
-                  />
+                  {project.videos?.length > 0 ? (
+                    <div className="w-full h-full relative">
+                      <video src={project.videos[0]} muted loop playsInline className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                          <div className="w-0 h-0 border-y-5 border-y-transparent border-l-[10px] border-l-white ml-1" />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <motion.img
+                      src={project.images?.[0] || project.image}
+                      alt={project.title}
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                   
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-[#1a1410]/0 group-hover:bg-[#1a1410]/40 transition-colors duration-300 flex items-center justify-center">

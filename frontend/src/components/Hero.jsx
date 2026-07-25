@@ -21,10 +21,10 @@ const Hero = ({ darkMode }) => {
               Full Stack Developer
             </span>
             
-            <h1 className={`font-serif text-4xl sm:text-6xl lg:text-8xl font-normal leading-[1] lg:leading-[0.9] break-words ${
+            <h1 className={`font-serif text-[34px] sm:text-[58px] lg:text-[78px] font-normal leading-[1] lg:leading-[0.9] ${
               darkMode ? 'text-white' : 'text-[#1a1410]'
             }`}>
-              Amar Hassen<br />Mohammednur
+              Amar Hassen Mohammednur
             </h1>
 
             <p className={`text-sm leading-relaxed max-w-md font-mono ${
