@@ -11,11 +11,13 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:slug', async (req, res) => {
   try {
-    const design = await Design.findById(req.params.id);
-    if (!design || !design.published) return res.status(404).json({ error: 'Design not found' });
-    res.json(design);
+    const design = await Design.findOne({ slug: req.params.slug, published: true });
+    if (design) return res.json(design);
+    const byId = await Design.findById(req.params.slug);
+    if (byId && byId.published) return res.json(byId);
+    res.status(404).json({ error: 'Design not found' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

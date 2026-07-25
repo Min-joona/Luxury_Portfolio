@@ -9,7 +9,7 @@ const DesignCard = ({ design, darkMode }) => {
   const isVideo = design.cover ? design.videos?.includes(design.cover) : !!design.videos?.length;
 
   return (
-    <Link to={`/designs/${design._id}`} className="group block">
+    <Link to={`/designs/${design.slug || design._id}`} className="group block">
       <div className={`relative aspect-[4/3] rounded-xl overflow-hidden mb-4 ${darkMode ? 'bg-[#2a2018]' : 'bg-[#e0d5cc]'}`}>
         {isVideo ? (
           <video src={coverUrl} muted loop playsInline className="w-full h-full object-cover" />

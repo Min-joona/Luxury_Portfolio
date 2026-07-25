@@ -9,6 +9,8 @@ const PageView = require('../models/PageView');
 const { verifyToken } = require('../controllers/authController');
 const { uploadImage, uploadVideo, deleteImage } = require('../utils/cloudinary');
 
+const slugify = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 // ─── Upload Image ───────────────────────────────────────────────────
 router.post('/upload', verifyToken, async (req, res) => {
   try {
@@ -125,7 +127,8 @@ router.get('/designs', verifyToken, async (req, res) => {
 
 router.post('/designs', verifyToken, async (req, res) => {
   try {
-    const design = new Design(req.body);
+    const data = { ...req.body, slug: slugify(req.body.title) };
+    const design = new Design(data);
     await design.save();
     res.status(201).json(design);
   } catch (error) {
@@ -135,7 +138,9 @@ router.post('/designs', verifyToken, async (req, res) => {
 
 router.put('/designs/:id', verifyToken, async (req, res) => {
   try {
-    const design = await Design.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const data = { ...req.body };
+    if (data.title) data.slug = slugify(data.title);
+    const design = await Design.findByIdAndUpdate(req.params.id, data, { new: true });
     if (!design) return res.status(404).json({ error: 'Design not found' });
     res.json(design);
   } catch (error) {

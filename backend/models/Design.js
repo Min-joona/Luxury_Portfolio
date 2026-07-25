@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const designSchema = new mongoose.Schema({
   title: { type: String, required: true },
+  slug: { type: String, unique: true, sparse: true },
   category: { type: String, required: true },
   images: [{ type: String }],
   image: { type: String },
