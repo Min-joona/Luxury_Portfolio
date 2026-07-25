@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Trash2, Save, X, Upload, Eye, Calendar, FileText, Heart } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, X, Upload, Eye, Calendar, FileText } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
 import { api, uploadImage } from '../api';
 
@@ -112,6 +112,7 @@ const AdminBlogs = ({ darkMode }) => {
   };
 
   const handleTogglePublish = async (blog) => {
+    const updated = { ...formData, published: !blog.published };
     try {
       await api(`/api/admin/blogs/${blog._id}`, {
         method: 'PUT',
