@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Trash2, Save, X, Upload, Palette } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, X, Upload, Palette, Image as ImageIcon } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
 import { api, uploadImage } from '../api';
 
@@ -20,7 +20,7 @@ const AdminDesigns = ({ darkMode }) => {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [form, setForm] = useState({ title: '', category: '', image: '', link: '', published: true });
+  const [form, setForm] = useState({ title: '', category: '', images: [], link: '', published: true });
 
   useEffect(() => {
     if (!localStorage.getItem('adminToken')) { navigate('/admin/login'); return; }
@@ -36,13 +36,18 @@ const AdminDesigns = ({ darkMode }) => {
     setUploading(true);
     try {
       const url = await uploadImage(file);
-      setForm(f => ({ ...f, image: url }));
+      setForm(f => ({ ...f, images: [...f.images, url] }));
     } catch (e) { console.error('Upload failed', e); alert('Image upload failed: ' + e.message); }
     setUploading(false);
   };
 
+  const removeImage = (index) => {
+    setForm(f => ({ ...f, images: f.images.filter((_, i) => i !== index) }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (form.images.length === 0) { alert('Add at least one image'); return; }
     try {
       const endpoint = editing ? `/api/admin/designs/${editing._id}` : '/api/admin/designs';
       await api(endpoint, { method: editing ? 'PUT' : 'POST', body: JSON.stringify(form) });
@@ -55,9 +60,13 @@ const AdminDesigns = ({ darkMode }) => {
     try { await api(`/api/admin/designs/${id}`, { method: 'DELETE' }); fetchDesigns(); } catch (e) { console.error(e); }
   };
 
-  const openNewForm = () => { setForm({ title: '', category: '', image: '', link: '', published: true }); setEditing(null); setShowForm(true); };
-  const startEdit = (d) => { setEditing(d); setForm(d); setShowForm(true); };
-  const resetForm = () => { setShowForm(false); setEditing(null); setForm({ title: '', category: '', image: '', link: '', published: true }); };
+  const openNewForm = () => { setForm({ title: '', category: '', images: [], link: '', published: true }); setEditing(null); setShowForm(true); };
+  const startEdit = (d) => {
+    setEditing(d);
+    setForm({ ...d, images: d.images && d.images.length ? d.images : (d.image ? [d.image] : []) });
+    setShowForm(true);
+  };
+  const resetForm = () => { setShowForm(false); setEditing(null); setForm({ title: '', category: '', images: [], link: '', published: true }); };
 
   if (loading) return (
     <div className="min-h-screen bg-[#0d0705] flex items-center justify-center">
@@ -89,17 +98,30 @@ const AdminDesigns = ({ darkMode }) => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <input placeholder="Title" value={form.title} onChange={e => setForm({...form, title: e.target.value})}
                     className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#D4AF37]/50 focus:outline-none transition-colors" required />
-                  <input placeholder="Category (e.g. Product Design, UI/UX)" value={form.category} onChange={e => setForm({...form, category: e.target.value})}
+                  <input placeholder="Category (e.g. Branding, UI/UX)" value={form.category} onChange={e => setForm({...form, category: e.target.value})}
                     className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#D4AF37]/50 focus:outline-none transition-colors" required />
-                  <div className="flex gap-4">
-                    <input placeholder="Image URL" value={form.image} onChange={e => setForm({...form, image: e.target.value})}
-                      className="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#D4AF37]/50 focus:outline-none transition-colors" />
-                    <button type="button" onClick={() => fileRef.current.click()} disabled={uploading}
-                      className="flex items-center gap-2 px-4 py-3 rounded-lg border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-all">
-                      <Upload size={16} /> {uploading ? '...' : 'Upload'}
-                    </button>
+
+                  <div>
+                    <label className="block text-white/50 font-mono text-xs uppercase tracking-wider mb-2">Images</label>
+                    <div className="flex flex-wrap gap-3 mb-3">
+                      {form.images.map((url, i) => (
+                        <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 group">
+                          <img src={url} alt="" className="w-full h-full object-cover" />
+                          <button type="button" onClick={() => removeImage(i)}
+                            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <X size={12} />
+                          </button>
+                          {i === 0 && <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-[#D4AF37] text-[8px] font-mono text-[#0d0705]">Cover</span>}
+                        </div>
+                      ))}
+                      <button type="button" onClick={() => fileRef.current.click()} disabled={uploading}
+                        className="w-24 h-24 rounded-lg border-2 border-dashed border-white/10 flex items-center justify-center hover:border-white/30 transition-all text-white/30 hover:text-white/60">
+                        {uploading ? <div className="w-5 h-5 rounded-full border-2 border-[#D4AF37] border-t-transparent animate-spin" /> : <Upload size={20} />}
+                      </button>
+                    </div>
+                    <input type="file" ref={fileRef} accept="image/*" className="hidden" onChange={e => e.target.files[0] && uploadToCloudinary(e.target.files[0])} />
                   </div>
-                  <input type="file" ref={fileRef} accept="image/*" className="hidden" onChange={e => e.target.files[0] && uploadToCloudinary(e.target.files[0])} />
+
                   <input placeholder="Figma Link (optional)" value={form.link} onChange={e => setForm({...form, link: e.target.value})}
                     className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#D4AF37]/50 focus:outline-none transition-colors" />
                   <div className="flex items-center gap-3 pt-2">
@@ -126,13 +148,12 @@ const AdminDesigns = ({ darkMode }) => {
               <motion.div key={d._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 className="p-4 rounded-xl bg-[#1a1410] border border-white/5 hover:border-white/10 transition-all group">
                 <div className="relative">
-                  <img src={d.image} alt={d.title} className="w-full aspect-[4/3] rounded-lg object-cover mb-3" />
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => {
-                      const newVal = !d.published;
-                      api(`/api/admin/designs/${d._id}`, { method: 'PUT', body: JSON.stringify({ published: newVal }) }).then(fetchDesigns);
-                    }}><ToggleSwitch checked={d.published} onChange={() => {}} /></button>
-                  </div>
+                  <img src={d.images?.[0] || d.image} alt={d.title} className="w-full aspect-[4/3] rounded-lg object-cover mb-3" />
+                  {(d.images?.length || (d.image ? 1 : 0)) > 1 && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 text-white/80 text-[9px] font-mono">
+                      {(d.images?.length || (d.image ? 1 : 0))} images
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <div>

@@ -1,7 +1,80 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Figma, ArrowUpRight } from 'lucide-react';
+import { Figma, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '../api';
+
+const DesignCard = ({ design, darkMode }) => {
+  const images = design.images?.length ? design.images : (design.image ? [design.image] : []);
+  const intervalRef = useRef(null);
+  const [active, setActive] = useState(false);
+  const [index, setIndex] = useState(0);
+
+  const stop = useCallback(() => {
+    setActive(false);
+    setIndex(0);
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
+  }, []);
+
+  const toggle = useCallback(() => {
+    if (active) { stop(); return; }
+    if (images.length <= 1) {
+      if (design.link) window.open(design.link, '_blank');
+      return;
+    }
+    setActive(true);
+    intervalRef.current = setInterval(() => {
+      setIndex(i => (i + 1) % images.length);
+    }, 1800);
+  }, [active, images.length, design.link, stop]);
+
+  useEffect(() => {
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, []);
+
+  return (
+    <div className="group">
+      <div onClick={toggle} className="block cursor-pointer">
+        <div className={`relative aspect-[4/3] rounded-xl overflow-hidden mb-4 ${
+          darkMode ? 'bg-[#2a2018]' : 'bg-[#e0d5cc]'
+        }`}>
+          <div className="w-full h-full relative">
+            {images.map((img, i) => (
+              <img
+                key={i}
+                src={img}
+                alt={design.title}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+                style={{ opacity: i === index ? 1 : 0, transform: i === index ? 'translateX(0)' : 'translateX(-30px)' }}
+              />
+            ))}
+          </div>
+          <div className="absolute inset-0 bg-[#1a1410]/0 hover:bg-[#1a1410]/20 transition-colors duration-300" />
+          {images.length > 1 && (
+            <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-[9px] font-mono transition-opacity duration-300 ${
+              darkMode ? 'bg-black/50 text-white/80' : 'bg-white/80 text-[#1a1410]/80'
+            }`}>
+              {index + 1}/{images.length}
+            </div>
+          )}
+          {images.length <= 1 && design.link && (
+            <div className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <ArrowUpRight size={16} className="text-[#1a1410]" />
+            </div>
+          )}
+        </div>
+        <span className={`text-[10px] tracking-[0.2em] font-mono uppercase mb-1 block ${
+          darkMode ? 'text-white/50' : 'text-[#1a1410]/50'
+        }`}>
+          {design.category}
+        </span>
+        <h3 className={`font-serif text-lg ${darkMode ? 'text-white' : 'text-[#1a1410]'}`}>
+          {design.title}
+        </h3>
+      </div>
+    </div>
+  );
+};
 
 const Designs = ({ darkMode }) => {
   const [designs, setDesigns] = useState([]);
@@ -26,7 +99,6 @@ const Designs = ({ darkMode }) => {
   return (
     <section id="designs" className="py-24 px-6 lg:px-12">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -44,8 +116,7 @@ const Designs = ({ darkMode }) => {
               Designs
             </h2>
             <p className={`text-sm max-w-lg font-mono ${darkMode ? 'text-white/60' : 'text-[#1a1410]/60'}`}>
-              Interface and brand explorations crafted in Figma — a look at how I think
-              through layout, hierarchy, and feel before a single line of code.
+              Interface and brand explorations crafted in Figma — click any card to cycle through the full set.
             </p>
           </div>
           <a
@@ -61,7 +132,6 @@ const Designs = ({ darkMode }) => {
           </a>
         </motion.div>
 
-        {/* Loading state */}
         {loading && (
           <div className="flex items-center justify-center py-24">
             <div className={`w-8 h-8 border-2 border-t-transparent rounded-full animate-spin ${
@@ -70,67 +140,33 @@ const Designs = ({ darkMode }) => {
           </div>
         )}
 
-        {/* Error state */}
         {error && (
           <p className={`text-center text-sm font-mono py-24 ${darkMode ? 'text-white/50' : 'text-[#1a1410]/50'}`}>
             Unable to load designs at this time.
           </p>
         )}
 
-        {/* Empty state */}
         {!loading && !error && designs.length === 0 && (
           <p className={`text-center text-sm font-mono py-24 ${darkMode ? 'text-white/50' : 'text-[#1a1410]/50'}`}>
             No designs to show yet.
           </p>
         )}
 
-        {/* Designs grid */}
         {!loading && !error && designs.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {designs.map((design, index) => {
-              const Wrapper = design.link ? 'a' : 'div';
-              const wrapperProps = design.link
-                ? { href: design.link, target: '_blank', rel: 'noopener noreferrer' }
-                : {};
-              return (
-                <motion.div
-                  key={design._id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.08 }}
-                  className="group"
-                >
-                  <Wrapper {...wrapperProps} className="block cursor-pointer">
-                    <div className={`relative aspect-[4/3] rounded-xl overflow-hidden mb-4 ${
-                      darkMode ? 'bg-[#2a2018]' : 'bg-[#e0d5cc]'
-                    }`}>
-                      <img
-                        src={design.image}
-                        alt={design.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-[#1a1410]/0 group-hover:bg-[#1a1410]/20 transition-colors duration-300" />
-                      <div className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ArrowUpRight size={16} className="text-[#1a1410]" />
-                      </div>
-                    </div>
-                    <span className={`text-[10px] tracking-[0.2em] font-mono uppercase mb-1 block ${
-                      darkMode ? 'text-white/50' : 'text-[#1a1410]/50'
-                    }`}>
-                      {design.category}
-                    </span>
-                    <h3 className={`font-serif text-lg ${darkMode ? 'text-white' : 'text-[#1a1410]'}`}>
-                      {design.title}
-                    </h3>
-                  </Wrapper>
-                </motion.div>
-              );
-            })}
+            {designs.map((design, index) => (
+              <motion.div
+                key={design._id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.08 }}
+              >
+                <DesignCard design={design} darkMode={darkMode} />
+              </motion.div>
+            ))}
           </div>
         )}
-
       </div>
     </section>
   );
